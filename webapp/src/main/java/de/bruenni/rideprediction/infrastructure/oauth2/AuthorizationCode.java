@@ -12,4 +12,8 @@ public class AuthorizationCode extends SingleValueObject<String> {
     public AuthorizationCode(String code) {
         super(notEmpty(code, "code may not be empty"));
     }
+
+    @Override public String toString() {
+        return "AuthorizationCode{} " + super.toString();
+    }
 }

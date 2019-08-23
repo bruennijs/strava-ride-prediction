@@ -19,6 +19,7 @@
 
   <modules>
     <module>webapp</module>
+    <module>identity</module>
   </modules>
 
   <properties>
@@ -254,15 +255,21 @@
         <scope>import</scope>
       </dependency>
       <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.9</version>
+      </dependency>
+      <dependency>
         <groupId>io.thorntail.examples</groupId>
         <artifactId>examples-base</artifactId>
         <version>${project.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-lang3</artifactId>
-        <version>3.9</version>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>

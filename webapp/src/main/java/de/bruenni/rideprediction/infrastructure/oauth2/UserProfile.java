@@ -1,17 +1,18 @@
 package de.bruenni.rideprediction.infrastructure.oauth2;
 
 import static org.apache.commons.lang3.Validate.notEmpty;
+import static org.apache.commons.lang3.Validate.notNull;
 
 public class UserProfile {
     private String id;
 
-    private String accessToken;
+    private AccessToken accessToken;
 
     private String username;
 
-    public UserProfile(String id, String accessToken, String username) {
+    public UserProfile(String id, AccessToken accessToken, String username) {
         this.id = notEmpty(id, "id may not be empty");
-        this.accessToken = notEmpty(accessToken, "accessToken may not be empty");
+        this.accessToken = notNull(accessToken, "accessToken may not be empty");
         this.username = notEmpty(username, "username may mnot be empty");
     }
 
@@ -19,7 +20,7 @@ public class UserProfile {
         return id;
     }
 
-    public String getAccessToken() {
+    public AccessToken getAccessToken() {
         return accessToken;
     }
 
