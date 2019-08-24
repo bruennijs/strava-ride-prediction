@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -29,8 +30,24 @@ public class Oauth2Resource {
      * access token. APplication must now retrieve
      * @return
      */
+    @GET
+    @Path("/login")
+    public Response login() {
+
+        URI redirectUrl = service.createAuthorizationUrl();
+
+        return Response
+                .temporaryRedirect(redirectUrl)
+                .build();
+    }
+
+    /**
+     * OAuth redirect uri for grant type 'code' to POST
+     * access token. APplication must now retrieve
+     * @return
+     */
     @POST
-    @Path("/exchange_token")
+    @Path("/tokenexchange")
     public Response handleAuthorizationCode(@QueryParam(value = "code") AuthorizationCode code) {
 
         LOG.info("Auth_code=" + code);
