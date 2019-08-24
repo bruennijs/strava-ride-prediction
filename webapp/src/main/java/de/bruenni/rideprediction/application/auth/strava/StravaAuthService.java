@@ -20,16 +20,28 @@ public class StravaAuthService {
 
     private final String exchangeTokenUrl;
 
-    public StravaAuthService(@ConfigProperty(name = "strava.oauth.clientid") String clientId,
-            @ConfigProperty(name = "strava.oauth.clientSecret")
-            String clientSecret,
+    private final String scope;
+
+    @Inject
+    public StravaAuthService(@ConfigProperty(name = "oauth.clientid") String clientId,
+            @ConfigProperty(name = "oauth.clientSecret")
+                    String clientSecret,
             @ConfigProperty(name = "oauth.authorize.url") String authorizeUrl,
-            @ConfigProperty(name = "oauth.tokenexchange.redirect-url")
-             String exchangeTokenUrl) {
+            @ConfigProperty(name = "oauth.tokenexchange.url") String exchangeTokenUrl,
+            @ConfigProperty(name = "oauth.scope") String scope) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.authorizeUrl = authorizeUrl;
         this.exchangeTokenUrl = exchangeTokenUrl;
+        this.scope = scope;
+    }
+
+    protected StravaAuthService() {
+        scope = "";
+        exchangeTokenUrl = "";
+        authorizeUrl = "";
+        clientSecret = "";
+        clientId = "";
     }
 
     @Inject
@@ -40,7 +52,8 @@ public class StravaAuthService {
      * @return
      */
     public URI createAuthorizationUrl() {
-        return URI.create(String.format("{0}?client_id={1}&redirect_uri={2}", authorizeUrl, clientId, exchangeTokenUrl));
+        String format = String.format("%s?client_id=%s&redirect_uri=%s&response_type=code&scope=%s", authorizeUrl, clientId, exchangeTokenUrl, scope);
+        return URI.create(format);
     }
 
     /**

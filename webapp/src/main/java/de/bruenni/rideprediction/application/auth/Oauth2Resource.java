@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 
 @ApplicationScoped
-@Path("/auth")
+@Path("/oauth")
 public class Oauth2Resource {
 
     private static Logger LOG = LoggerFactory.getLogger(Oauth2Resource.class);
@@ -43,10 +43,10 @@ public class Oauth2Resource {
 
     /**
      * OAuth redirect uri for grant type 'code' to POST
-     * access token. APplication must now retrieve
+     * access token. Application must now retrieve
      * @return
      */
-    @POST
+    @GET
     @Path("/tokenexchange")
     public Response handleAuthorizationCode(@QueryParam(value = "code") AuthorizationCode code) {
 
