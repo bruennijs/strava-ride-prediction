@@ -18,7 +18,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>webapp</module>
+    <module>activity-service</module>
     <module>identity</module>
   </modules>
 
