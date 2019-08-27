@@ -1,7 +1,9 @@
-package de.bruenni.rideprediction.activityservice.application.auth.strava;
+package de.bruenni.rideprediction.identity.impl.strava;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+
+import de.bruenni.rideprediction.identity.impl.strava.StravaTokenExchangeResponse;
 
 @Path("/oauth/token")
 //@RegisterRestClient

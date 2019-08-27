@@ -6,6 +6,6 @@ import javax.ws.rs.core.Application;
 /**
  * @author Yoshimasa Tanabe
  */
-@ApplicationPath("/rideprediction/activity-service")
+@ApplicationPath("/rideprediction")
 public class JaxRsApplication extends Application {
 }

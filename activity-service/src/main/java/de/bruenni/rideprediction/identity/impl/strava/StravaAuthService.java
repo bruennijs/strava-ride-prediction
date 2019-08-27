@@ -1,26 +1,19 @@
-package de.bruenni.rideprediction.activityservice.application.auth.strava;
+package de.bruenni.rideprediction.identity.impl.strava;
 
-import de.bruenni.rideprediction.activityservice.infrastructure.oauth2.AuthorizationCode;
-import de.bruenni.rideprediction.activityservice.infrastructure.oauth2.UserProfile;
+import de.bruenni.rideprediction.identity.api.AuthorizationCode;
+import de.bruenni.rideprediction.identity.api.UserProfile;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
-import java.net.URI;
 
 @ApplicationScoped
-public class StravaAuthService {
+@Alternative
+public class StravaAuthService extends GenericOicdAuthenticationBase {
 
-    private final String clientId;
-
-    private final String clientSecret;
-
-    private final String authorizeUrl;
-
-    private final String exchangeTokenUrl;
-
-    private final String scope;
+    private String clientSecret;
 
     @Inject
     public StravaAuthService(@ConfigProperty(name = "oauth.clientid") String clientId,
@@ -29,32 +22,16 @@ public class StravaAuthService {
             @ConfigProperty(name = "oauth.authorize.url") String authorizeUrl,
             @ConfigProperty(name = "oauth.tokenexchange.url") String exchangeTokenUrl,
             @ConfigProperty(name = "oauth.scope") String scope) {
-        this.clientId = clientId;
+        super(authorizeUrl, clientId, exchangeTokenUrl, scope);
         this.clientSecret = clientSecret;
-        this.authorizeUrl = authorizeUrl;
-        this.exchangeTokenUrl = exchangeTokenUrl;
-        this.scope = scope;
     }
 
     protected StravaAuthService() {
-        scope = "";
-        exchangeTokenUrl = "";
-        authorizeUrl = "";
-        clientSecret = "";
-        clientId = "";
+        super("", "", "", "");
     }
 
     @Inject
     private StravaAuthClient client;
-
-    /**
-     * Builds redirect URI to OAuth2 authorization server containing client id and own redirect uri
-     * @return
-     */
-    public URI createAuthorizationUrl() {
-        String format = String.format("%s?client_id=%s&redirect_uri=%s&response_type=code&scope=%s", authorizeUrl, clientId, exchangeTokenUrl, scope);
-        return URI.create(format);
-    }
 
     /**
      * Gets the OAuth2 access token and additional user profile information.

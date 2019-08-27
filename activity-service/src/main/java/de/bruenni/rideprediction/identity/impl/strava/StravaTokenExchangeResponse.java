@@ -1,6 +1,6 @@
-package de.bruenni.rideprediction.activityservice.application.auth.strava;
+package de.bruenni.rideprediction.identity.impl.strava;
 
-import de.bruenni.rideprediction.activityservice.infrastructure.oauth2.AccessToken;
+import de.bruenni.rideprediction.identity.api.AccessToken;
 
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;

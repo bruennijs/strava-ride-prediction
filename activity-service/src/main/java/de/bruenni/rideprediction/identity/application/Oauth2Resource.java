@@ -1,13 +1,16 @@
-package de.bruenni.rideprediction.activityservice.application.auth;
+package de.bruenni.rideprediction.identity.application;
 
-import de.bruenni.rideprediction.activityservice.application.auth.strava.StravaAuthService;
-import de.bruenni.rideprediction.activityservice.infrastructure.oauth2.AuthorizationCode;
-import de.bruenni.rideprediction.activityservice.infrastructure.oauth2.UserProfile;
+import de.bruenni.rideprediction.identity.api.OidcAuthenticationApi;
+import de.bruenni.rideprediction.identity.impl.strava.StravaAuthService;
+import de.bruenni.rideprediction.identity.api.AuthorizationCode;
+import de.bruenni.rideprediction.identity.api.UserProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -23,7 +26,7 @@ public class Oauth2Resource {
     private static Logger LOG = LoggerFactory.getLogger(Oauth2Resource.class);
 
     @Inject
-    private StravaAuthService service;
+    private OidcAuthenticationApi service;
 
     /**
      * OAuth redirect uri for grant type 'code' to POST
@@ -32,6 +35,7 @@ public class Oauth2Resource {
      */
     @GET
     @Path("/login")
+    @Valid
     public Response login(@QueryParam(value = "scope") @Null String scope) {
 
         if (scope != null) {
@@ -52,7 +56,8 @@ public class Oauth2Resource {
      */
     @GET
     @Path("/tokenexchange")
-    public Response handleAuthorizationCode(@QueryParam(value = "code") AuthorizationCode code) {
+    @Valid
+    public Response handleAuthorizationCode(@QueryParam(value = "code") @NotNull AuthorizationCode code) {
 
         LOG.info("Auth_code=" + code);
 

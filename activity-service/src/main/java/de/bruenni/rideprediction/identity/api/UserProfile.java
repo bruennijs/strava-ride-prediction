@@ -1,4 +1,4 @@
-package de.bruenni.rideprediction.activityservice.infrastructure.oauth2;
+package de.bruenni.rideprediction.identity.api;
 
 import static org.apache.commons.lang3.Validate.notEmpty;
 import static org.apache.commons.lang3.Validate.notNull;

@@ -1,0 +1,11 @@
+function(accessToken, ctx, cb) {
+  request.post('https://www.strava.com/oauth/token?code=' + accessToken + '&client_secret=02d44c5ec57f5d838adba6b5546c173c3c7b98bc&grant_type=authorization_code&client_id=21265', function (e, r, b) {
+    if (e) {
+      return callback(e);
+    }
+    if (r.statusCode !== 200) {
+      return callback(new Error('StatusCode:' + r.statusCode));
+    }
+    callback(null, JSON.parse(b));
+  });
+}

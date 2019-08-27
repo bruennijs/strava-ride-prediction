@@ -1,4 +1,4 @@
-package de.bruenni.rideprediction.activityservice.application.auth.strava;
+package de.bruenni.rideprediction.identity.impl.strava;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;

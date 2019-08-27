@@ -1,11 +1,11 @@
-package de.bruenni.rideprediction.activityservice.infrastructure.oauth2;
+package de.bruenni.rideprediction.identity.api;
 
 import de.bruenni.rideprediction.activityservice.infrastructure.domain.SingleValueObject;
 
 import static org.apache.commons.lang3.Validate.notEmpty;
 
-public class AccessToken extends SingleValueObject<String> {
-    public AccessToken(String initialValue) {
+public class RefreshToken extends SingleValueObject<String> {
+    public RefreshToken(String initialValue) {
         super(notEmpty(initialValue, "AccessToken may not be null or empty"));
     }
 }
