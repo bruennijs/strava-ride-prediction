@@ -30,6 +30,8 @@ public class LogJwtUpnContainerRequestFilter implements ContainerRequestFilter {
   public void filter(ContainerRequestContext requestContext) throws IOException {
     if (this.upn.isResolvable()) {
       LOG.info("JWT upn claim value: " + this.upn.get());
+    } else {
+      LOG.info("Could not find any mp-jwt");
     }
   }
 }

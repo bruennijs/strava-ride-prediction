@@ -69,9 +69,13 @@
             <groupId>io.thorntail</groupId>
             <artifactId>jsonb</artifactId>
         </dependency>
+<!--        <dependency>
+            <groupId>io.thorntail</groupId>
+            <artifactId>keycloak</artifactId>
+        </dependency>-->
         <dependency>
             <groupId>io.thorntail</groupId>
-            <artifactId>microprofile-jwt</artifactId>
+            <artifactId>keycloak-microprofile-jwt</artifactId>
         </dependency>
 
         <!-- STRAVA API -->
