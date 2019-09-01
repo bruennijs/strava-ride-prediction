@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Strava native authentication api implementation.
  *
- * @author Oliver Brüntje - open knowledge GmbH
+ * @author Oliver Brüntje
  */
 
 @ApplicationScoped

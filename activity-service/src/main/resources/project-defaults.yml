@@ -4,6 +4,16 @@ application:
 thorntail:
   port:
     offset: 5
+  microprofile:
+    # https://docs.thorntail.io/2.5.0.Final/#_microprofile_jwt_rbac_auth
+    jwt:
+      token:
+        realm: "rideprediction"
+        header: "Cookie"
+        cookie: "idtoken"
+        signer-pub-key-location: "https://rideprediction.eu.auth0.com/.well-known/jwks.json"
+        jwks-refresh-interval: 1440
+
   logging:
     pattern-formatters:
       PATTERN:

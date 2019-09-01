@@ -4,7 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <properties>
-        <version.pac4j-auth>3.7.0</version.pac4j-auth>
         <project.version>1.0</project.version>
     </properties>
 
@@ -88,11 +87,6 @@
 
 
         <!-- STRAVA API -->
-        <dependency>
-            <groupId>org.pac4j</groupId>
-            <artifactId>pac4j-oauth</artifactId>
-            <version>${version.pac4j-auth}</version>
-        </dependency>
 
         <dependency>
             <groupId>io.thorntail</groupId>

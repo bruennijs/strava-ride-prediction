@@ -67,8 +67,9 @@ public class Oauth2Resource {
 
         OidcTokens tokens = service.get().getTokens(request);
         LOG.info("id_token=" + tokens.getIdToken());
+
         return Response
-                .temporaryRedirect(URI.create("rideprediction"))
+                .temporaryRedirect(URI.create(""))
                 .cookie(new NewCookie("idtoken", tokens.getIdToken().getValue()))
                 .build();
     }
