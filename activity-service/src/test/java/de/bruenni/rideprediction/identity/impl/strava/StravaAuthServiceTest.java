@@ -5,7 +5,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
+
+import static org.mockito.Mockito.mock;
 
 @RunWith(JUnit4.class)
 public class StravaAuthServiceTest {
@@ -15,10 +18,10 @@ public class StravaAuthServiceTest {
         // given
         URI expected = URI
                 .create("https://www.strava.com/auth?client_id=223&redirect_uri=https://localhost:8085/hello&response_type=code&scope=readall");
-        StravaAuthService sut = new StravaAuthService("223", "sih", "https://www.strava.com/auth", "https://localhost:8085/hello", "readall");
+        StravaAuthenticationImpl sut = new StravaAuthenticationImpl("223", "sih", "https://www.strava.com/auth", "https://localhost:8085/hello", "readall");
 
         // when
-        URI url = sut.createAuthorizationUrl();
+        URI url = sut.createAuthorizationUrl(mock(HttpServletRequest.class));
 
         // then
         Assert.assertEquals(expected, url);

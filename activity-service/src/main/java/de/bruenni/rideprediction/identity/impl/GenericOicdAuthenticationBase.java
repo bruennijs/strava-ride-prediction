@@ -1,13 +1,14 @@
-package de.bruenni.rideprediction.identity.impl.strava;
+package de.bruenni.rideprediction.identity.impl;
 
 import de.bruenni.rideprediction.identity.api.OidcAuthenticationApi;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 
 /**
  * Vase class for all OIDC implementations.
  *
- * @author Oliver Brüntje - open knowledge GmbH
+ * @author Oliver Brüntje
  */
 public abstract class GenericOicdAuthenticationBase implements OidcAuthenticationApi {
     protected String authorizeUrl;
@@ -30,7 +31,7 @@ public abstract class GenericOicdAuthenticationBase implements OidcAuthenticatio
      * Builds redirect URI to OAuth2 authorization server containing client id and own redirect uri
      * @return
      */
-    @Override public URI createAuthorizationUrl() {
+    @Override public URI createAuthorizationUrl(HttpServletRequest request) {
         String format = String.format("%s?client_id=%s&redirect_uri=%s&response_type=code&scope=%s", authorizeUrl, clientId, redirectUri, scope);
         return URI.create(format);
     }

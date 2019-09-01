@@ -1,20 +1,23 @@
 package de.bruenni.rideprediction.identity.application;
 
+import de.bruenni.rideprediction.identity.api.InvalidRequestException;
 import de.bruenni.rideprediction.identity.api.OidcAuthenticationApi;
-import de.bruenni.rideprediction.identity.impl.strava.StravaAuthService;
 import de.bruenni.rideprediction.identity.api.AuthorizationCode;
-import de.bruenni.rideprediction.identity.api.UserProfile;
+import de.bruenni.rideprediction.identity.api.OidcTokens;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
@@ -26,7 +29,7 @@ public class Oauth2Resource {
     private static Logger LOG = LoggerFactory.getLogger(Oauth2Resource.class);
 
     @Inject
-    private OidcAuthenticationApi service;
+    private Instance<OidcAuthenticationApi> service;
 
     /**
      * OAuth redirect uri for grant type 'code' to POST
@@ -36,13 +39,13 @@ public class Oauth2Resource {
     @GET
     @Path("/login")
     @Valid
-    public Response login(@QueryParam(value = "scope") @Null String scope) {
+    public Response login(@Context HttpServletRequest request, @QueryParam(value = "scope") @Null String scope) {
 
         if (scope != null) {
             LOG.info("desired scope=" + scope);
         }
 
-        URI redirectUrl = service.createAuthorizationUrl();
+        URI redirectUrl = service.get().createAuthorizationUrl(request);
 
         return Response
                 .temporaryRedirect(redirectUrl)
@@ -57,15 +60,16 @@ public class Oauth2Resource {
     @GET
     @Path("/tokenexchange")
     @Valid
-    public Response handleAuthorizationCode(@QueryParam(value = "code") @NotNull AuthorizationCode code) {
+    public Response handleAuthorizationCode(@Context HttpServletRequest request, @QueryParam(value = "code") @NotNull AuthorizationCode code)
+            throws InvalidRequestException {
 
         LOG.info("Auth_code=" + code);
 
-        UserProfile profile = service.getAccessToken(code);
-        LOG.info("access_token=" + profile.getAccessToken());
+        OidcTokens tokens = service.get().getTokens(request);
+        LOG.info("id_token=" + tokens.getIdToken());
         return Response
                 .temporaryRedirect(URI.create("rideprediction"))
-                .cookie(new NewCookie("accesstoken", profile.getAccessToken().getValue()))
+                .cookie(new NewCookie("idtoken", tokens.getIdToken().getValue()))
                 .build();
     }
 }
