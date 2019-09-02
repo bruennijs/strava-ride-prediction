@@ -7,12 +7,15 @@ thorntail:
   microprofile:
     # https://docs.thorntail.io/2.5.0.Final/#_microprofile_jwt_rbac_auth
     jwt:
+      realm: "rideprediction"
+      claims:
+        groups: "strava:athlete"
       token:
-        realm: "rideprediction"
         header: "Cookie"
         cookie: "idtoken"
         signer-pub-key-location: "https://rideprediction.eu.auth0.com/.well-known/jwks.json"
         jwks-refresh-interval: 1440
+        issued-by: "https://rideprediction.eu.auth0.com/"
 
   logging:
     pattern-formatters:

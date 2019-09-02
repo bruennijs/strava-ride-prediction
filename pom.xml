@@ -24,6 +24,7 @@
 
   <properties>
     <version.thorntail>2.5.0.Final</version.thorntail>
+    <version.jose4j>0.6.0</version.jose4j>
 
     <maven.min.version>3.2.1</maven.min.version>
 
@@ -265,6 +266,16 @@
         <version>${project.version}</version>
         <scope>test</scope>
       </dependency>
+
+      <!-- JWT parser lib -->
+      <dependency>
+        <groupId>org.bitbucket.b_c</groupId>
+        <artifactId>jose4j</artifactId>
+        <version>${version.jose4j}</version>
+        <scope>compile</scope>
+      </dependency>
+
+      <!-- TESTING -->
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>

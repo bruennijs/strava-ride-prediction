@@ -1,4 +1,4 @@
-package de.bruenni.rideprediction.activityservice.infrastructure.rest.client.filter.filter;
+package de.bruenni.rideprediction.activityservice.infrastructure.rest.client.filter;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.slf4j.Logger;

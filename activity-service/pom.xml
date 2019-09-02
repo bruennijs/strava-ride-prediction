@@ -68,6 +68,13 @@
             <groupId>io.thorntail</groupId>
             <artifactId>jsonb</artifactId>
         </dependency>
+
+        <!-- logging -->
+        <dependency>
+            <groupId>io.thorntail</groupId>
+            <artifactId>logging</artifactId>
+        </dependency>
+
         <!-- SECURITY -->
         <dependency>
             <groupId>io.thorntail</groupId>
@@ -85,12 +92,10 @@
             <scope>provided</scope>
         </dependency>
 
-
-        <!-- STRAVA API -->
-
+        <!-- JWT parser lib -->
         <dependency>
-            <groupId>io.thorntail</groupId>
-            <artifactId>logging</artifactId>
+            <groupId>org.bitbucket.b_c</groupId>
+            <artifactId>jose4j</artifactId>
         </dependency>
 
         <!-- TESTING -->

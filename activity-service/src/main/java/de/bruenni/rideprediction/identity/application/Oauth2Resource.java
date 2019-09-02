@@ -4,6 +4,11 @@ import de.bruenni.rideprediction.identity.api.InvalidRequestException;
 import de.bruenni.rideprediction.identity.api.OidcAuthenticationApi;
 import de.bruenni.rideprediction.identity.api.AuthorizationCode;
 import de.bruenni.rideprediction.identity.api.OidcTokens;
+import de.bruenni.rideprediction.identity.infrastructure.JwtLogger;
+import org.jose4j.jwt.JwtClaims;
+import org.jose4j.jwt.consumer.InvalidJwtException;
+import org.jose4j.jwt.consumer.JwtConsumer;
+import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +25,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 @ApplicationScoped
@@ -30,6 +36,8 @@ public class Oauth2Resource {
 
     @Inject
     private Instance<OidcAuthenticationApi> service;
+
+    private JwtLogger jwtLogger = new JwtLogger();
 
     /**
      * OAuth redirect uri for grant type 'code' to POST
@@ -60,17 +68,31 @@ public class Oauth2Resource {
     @GET
     @Path("/tokenexchange")
     @Valid
-    public Response handleAuthorizationCode(@Context HttpServletRequest request, @QueryParam(value = "code") @NotNull AuthorizationCode code)
+    public Response handleAuthorizationCode(@Context HttpServletRequest request,
+            @Context UriInfo uriInfo,
+            @QueryParam(value = "code") @NotNull AuthorizationCode code)
             throws InvalidRequestException {
 
         LOG.info("Auth_code=" + code);
 
         OidcTokens tokens = service.get().getTokens(request);
-        LOG.info("id_token=" + tokens.getIdToken());
+
+        logTokens(tokens);
 
         return Response
-                .temporaryRedirect(URI.create(""))
-                .cookie(new NewCookie("idtoken", tokens.getIdToken().getValue()))
+                .temporaryRedirect(uriInfo.getBaseUri())
+                .cookie(new NewCookie("idtoken",
+                        tokens.getIdToken().getValue(),
+                        "/",
+                        "",
+                        "no comment",
+                        NewCookie.DEFAULT_MAX_AGE,
+                        false))
                 .build();
+    }
+
+    private void logTokens(OidcTokens tokens) {
+        String idTokenBase64 = tokens.getIdToken().getValue();
+        jwtLogger.log(idTokenBase64);
     }
 }
