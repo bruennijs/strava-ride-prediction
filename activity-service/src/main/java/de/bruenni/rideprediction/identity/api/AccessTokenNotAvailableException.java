@@ -6,5 +6,7 @@ package de.bruenni.rideprediction.identity.api;
  * @author Oliver Brüntje
  */
 public class AccessTokenNotAvailableException extends Exception {
-    public AccessTokenNotAvailableException(String message) {}
+    public AccessTokenNotAvailableException(String message) {
+        super(message);
+    }
 }

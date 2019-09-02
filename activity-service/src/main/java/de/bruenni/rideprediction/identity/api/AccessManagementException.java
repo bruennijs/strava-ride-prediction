@@ -9,5 +9,7 @@ import com.auth0.exception.Auth0Exception;
  * @author Oliver Brüntje
  */
 public class AccessManagementException extends Exception {
-    public AccessManagementException(String getIdentityProviderToken_failed, Auth0Exception e) {}
+    public AccessManagementException(String message, Throwable e) {
+        super(message, e);
+    }
 }
