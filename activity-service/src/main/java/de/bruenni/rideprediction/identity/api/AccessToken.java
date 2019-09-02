@@ -8,4 +8,9 @@ public class AccessToken extends Token {
     public AccessToken(String initialValue) {
         super(notEmpty(initialValue, "AccessToken may not be null or empty"));
     }
+
+    protected AccessToken() {
+        super("");
+        // CDI
+    }
 }

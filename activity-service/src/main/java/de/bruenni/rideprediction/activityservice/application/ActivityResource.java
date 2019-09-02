@@ -1,5 +1,9 @@
 package de.bruenni.rideprediction.activityservice.application;
 
+import de.bruenni.rideprediction.identity.api.AccessManagementException;
+import de.bruenni.rideprediction.identity.api.AccessToken;
+import de.bruenni.rideprediction.identity.api.AccessTokenNotAvailableException;
+import de.bruenni.rideprediction.identity.impl.auth0.AccessManagementService;
 import de.bruenni.rideprediction.identity.infrastructure.JwtLogger;
 import org.eclipse.microprofile.jwt.Claim;
 import org.eclipse.microprofile.jwt.Claims;
@@ -30,12 +34,24 @@ public class ActivityResource {
     @Claim(standard = Claims.sub)
     private Instance<String> jwtSubject;
 
+    @Inject
+    private AccessManagementService accessManagementService;
+
     @GET
     @Path("/overview")
     public Response getOverview() {
 
         LOG.info("jwt.sub=" + jwtSubject.get());
 
-        return Response.status(200).build();
+        try {
+            AccessToken accessToken = this.accessManagementService.GetIdentityProviderToken();
+
+            new JwtLogger().log(accessToken);
+
+            return Response.status(200).build();
+        } catch (Exception e) {
+            LOG.error("activity service get overview failed", e);
+            return Response.serverError().build();
+        }
     }
 }
