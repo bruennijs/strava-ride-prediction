@@ -1,5 +1,6 @@
 package de.bruenni.rideprediction.identity.infrastructure;
 
+import de.bruenni.rideprediction.identity.api.Token;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.jose4j.jwt.consumer.JwtConsumer;
@@ -19,16 +20,35 @@ public class JwtLogger {
      * Logs JWT.
      * @param jwtToken
      */
+    public <T extends Token> void log(T jwtToken) {
+        try {
+            JwtClaims claims = parseJwt(jwtToken.getValue());
+
+            LOG.info(jwtToken.getClass().getSimpleName() + " = [json=" + claims.toJson() + "]");
+            LOG.info(jwtToken.getClass().getSimpleName() + " = [raw=" + jwtToken + "]");
+        } catch (InvalidJwtException e) {
+            LOG.error("Cannot parse " + jwtToken.getClass().getSimpleName() + " = [raw=" + jwtToken + "]");
+        }
+    }
+
+    /**
+     * Logs JWT.
+     * @param jwtToken
+     */
     public void log(String jwtToken) {
         try {
-            JwtConsumer consumer = new JwtConsumerBuilder()
-                    .setSkipAllValidators()
-                    .setSkipSignatureVerification().build();
-            JwtClaims claims = consumer.processToClaims(jwtToken);
+            JwtClaims claims = parseJwt(jwtToken);
 
             LOG.info("jwt = [" + claims.toJson() + "]");
         } catch (InvalidJwtException e) {
             LOG.error("Cannot parse jwt [jwt = [" + jwtToken + "]]");
         }
+    }
+
+    private JwtClaims parseJwt(String jwtToken) throws InvalidJwtException {
+        JwtConsumer consumer = new JwtConsumerBuilder()
+                .setSkipAllValidators()
+                .setSkipSignatureVerification().build();
+        return consumer.processToClaims(jwtToken);
     }
 }

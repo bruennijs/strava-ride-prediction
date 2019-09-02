@@ -1,14 +1,10 @@
-package de.bruenni.rideprediction.identity.application;
+package de.bruenni.rideprediction.identity.jaxrs;
 
 import de.bruenni.rideprediction.identity.api.InvalidRequestException;
 import de.bruenni.rideprediction.identity.api.OidcAuthenticationApi;
 import de.bruenni.rideprediction.identity.api.AuthorizationCode;
 import de.bruenni.rideprediction.identity.api.OidcTokens;
 import de.bruenni.rideprediction.identity.infrastructure.JwtLogger;
-import org.jose4j.jwt.JwtClaims;
-import org.jose4j.jwt.consumer.InvalidJwtException;
-import org.jose4j.jwt.consumer.JwtConsumer;
-import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,7 +88,7 @@ public class Oauth2Resource {
     }
 
     private void logTokens(OidcTokens tokens) {
-        String idTokenBase64 = tokens.getIdToken().getValue();
-        jwtLogger.log(idTokenBase64);
+        jwtLogger.log(tokens.getIdToken());
+        jwtLogger.log(tokens.getAccessToken());
     }
 }

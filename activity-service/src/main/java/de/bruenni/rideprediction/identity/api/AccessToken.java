@@ -4,7 +4,7 @@ import de.bruenni.rideprediction.activityservice.infrastructure.domain.SingleVal
 
 import static org.apache.commons.lang3.Validate.notEmpty;
 
-public class AccessToken extends SingleValueObject<String> {
+public class AccessToken extends Token {
     public AccessToken(String initialValue) {
         super(notEmpty(initialValue, "AccessToken may not be null or empty"));
     }
