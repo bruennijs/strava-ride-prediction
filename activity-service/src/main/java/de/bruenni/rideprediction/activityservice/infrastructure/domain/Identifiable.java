@@ -11,7 +11,9 @@ import static org.apache.commons.lang3.Validate.notNull;
  */
 public class Identifiable<T> {
 
-    @JsonbProperty(value = "id")
+    protected static final String FIELD_ID = "id";
+
+    @JsonbProperty(value = FIELD_ID)
     private T id;
 
     public Identifiable(T id) {
@@ -20,9 +22,5 @@ public class Identifiable<T> {
 
     public T getId() {
         return id;
-    }
-
-    public void setId(T id) {
-        this.id = id;
     }
 }
