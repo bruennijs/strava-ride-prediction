@@ -1,6 +1,6 @@
 package de.bruenni.rideprediction.identity.api;
 
-import de.bruenni.rideprediction.activityservice.infrastructure.domain.SingleValueObject;
+import de.bruenni.rideprediction.identity.infrastructure.domain.SingleValueObject;
 
 /**
  * Base class of all tokens

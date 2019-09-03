@@ -1,9 +1,8 @@
 package de.bruenni.rideprediction.identity.api;
 
-import de.bruenni.rideprediction.activityservice.infrastructure.domain.SingleValueObject;
+import de.bruenni.rideprediction.identity.infrastructure.domain.SingleValueObject;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import static org.apache.commons.lang3.Validate.notEmpty;
 

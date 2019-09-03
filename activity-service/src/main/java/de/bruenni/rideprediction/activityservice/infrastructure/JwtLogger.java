@@ -1,4 +1,4 @@
-package de.bruenni.rideprediction.identity.infrastructure;
+package de.bruenni.rideprediction.activityservice.infrastructure;
 
 import de.bruenni.rideprediction.identity.api.Token;
 import org.jose4j.jwt.JwtClaims;

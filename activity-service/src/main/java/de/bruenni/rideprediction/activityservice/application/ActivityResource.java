@@ -1,9 +1,8 @@
 package de.bruenni.rideprediction.activityservice.application;
 
+import de.bruenni.rideprediction.activityservice.infrastructure.JwtLogger;
 import de.bruenni.rideprediction.identity.api.AccessToken;
 import de.bruenni.rideprediction.identity.api.TokenManagementService;
-import de.bruenni.rideprediction.identity.impl.auth0.Auth0TokenManagementService;
-import de.bruenni.rideprediction.identity.infrastructure.JwtLogger;
 import org.eclipse.microprofile.jwt.Claim;
 import org.eclipse.microprofile.jwt.Claims;
 import org.slf4j.Logger;

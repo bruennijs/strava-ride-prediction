@@ -4,7 +4,6 @@ import com.auth0.AuthenticationController;
 import com.auth0.client.auth.AuthAPI;
 import com.auth0.client.mgmt.ManagementAPI;
 import com.auth0.exception.Auth0Exception;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import de.bruenni.rideprediction.identity.api.AccessToken;
 import de.bruenni.rideprediction.identity.impl.auth0.AuthAPICdi;
 import de.bruenni.rideprediction.identity.impl.auth0.ManagementAPICdi;

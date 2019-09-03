@@ -1,9 +1,7 @@
 package de.bruenni.rideprediction.activityservice.infrastructure.rest.client.filter;
 
-import de.bruenni.rideprediction.identity.infrastructure.JwtLogger;
+import de.bruenni.rideprediction.activityservice.infrastructure.JwtLogger;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import org.jose4j.jwt.JwtClaims;
-import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

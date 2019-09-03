@@ -1,10 +1,10 @@
 package de.bruenni.rideprediction.activityservice.application;
 
+import de.bruenni.rideprediction.activityservice.infrastructure.JwtLogger;
 import de.bruenni.rideprediction.identity.api.InvalidRequestException;
 import de.bruenni.rideprediction.identity.api.OidcAuthenticationApi;
 import de.bruenni.rideprediction.identity.api.AuthorizationCode;
 import de.bruenni.rideprediction.identity.api.OidcTokens;
-import de.bruenni.rideprediction.identity.infrastructure.JwtLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

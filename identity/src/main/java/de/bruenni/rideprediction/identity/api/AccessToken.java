@@ -1,7 +1,5 @@
 package de.bruenni.rideprediction.identity.api;
 
-import de.bruenni.rideprediction.activityservice.infrastructure.domain.SingleValueObject;
-
 import static org.apache.commons.lang3.Validate.notEmpty;
 
 public class AccessToken extends Token {

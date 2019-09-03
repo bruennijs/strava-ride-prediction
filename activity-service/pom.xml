@@ -77,13 +77,13 @@
 
         <!-- SECURITY -->
         <dependency>
-            <groupId>io.thorntail</groupId>
-            <artifactId>microprofile-jwt</artifactId>
+            <groupId>de.bruennijs.rideprediction</groupId>
+            <artifactId>identity</artifactId>
+            <version>1.0.0-SNAPSHOTS</version>
         </dependency>
         <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>mvc-auth-commons</artifactId>
-            <version>(1.0,2.0)</version>
+            <groupId>io.thorntail</groupId>
+            <artifactId>microprofile-jwt</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.security.enterprise</groupId>

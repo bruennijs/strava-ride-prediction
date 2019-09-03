@@ -1,6 +1,6 @@
 package de.bruenni.rideprediction.identity.impl.strava;
 
-import de.bruenni.rideprediction.activityservice.infrastructure.rest.client.filter.LogHeaderClientRequestFilter;
+import de.bruenni.rideprediction.identity.infrastructure.rest.client.filter.LogHeaderClientRequestFilter;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
