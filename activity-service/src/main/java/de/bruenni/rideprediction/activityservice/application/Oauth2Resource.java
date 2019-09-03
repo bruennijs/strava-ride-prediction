@@ -1,4 +1,4 @@
-package de.bruenni.rideprediction.identity.jaxrs;
+package de.bruenni.rideprediction.activityservice.application;
 
 import de.bruenni.rideprediction.identity.api.InvalidRequestException;
 import de.bruenni.rideprediction.identity.api.OidcAuthenticationApi;
@@ -43,10 +43,10 @@ public class Oauth2Resource {
     @GET
     @Path("/login")
     @Valid
-    public Response login(@Context HttpServletRequest request, @QueryParam(value = "scope") @Null String scope) {
+    public Response login(@Context HttpServletRequest request, @QueryParam(value = "scope") @Null String connection) {
 
-        if (scope != null) {
-            LOG.info("desired scope=" + scope);
+        if (connection != null) {
+            LOG.info("desired connection=" + connection);
         }
 
         URI redirectUrl = service.get().createAuthorizationUrl(request);

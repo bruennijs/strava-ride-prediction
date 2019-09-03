@@ -1,13 +1,11 @@
 package de.bruenni.rideprediction.activityservice.application;
 
-import de.bruenni.rideprediction.identity.api.AccessManagementException;
 import de.bruenni.rideprediction.identity.api.AccessToken;
-import de.bruenni.rideprediction.identity.api.AccessTokenNotAvailableException;
-import de.bruenni.rideprediction.identity.impl.auth0.AccessManagementService;
+import de.bruenni.rideprediction.identity.api.TokenManagementService;
+import de.bruenni.rideprediction.identity.impl.auth0.Auth0TokenManagementService;
 import de.bruenni.rideprediction.identity.infrastructure.JwtLogger;
 import org.eclipse.microprofile.jwt.Claim;
 import org.eclipse.microprofile.jwt.Claims;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +33,7 @@ public class ActivityResource {
     private Instance<String> jwtSubject;
 
     @Inject
-    private AccessManagementService accessManagementService;
+    private TokenManagementService tokenManagementService;
 
     @GET
     @Path("/overview")
@@ -44,7 +42,7 @@ public class ActivityResource {
         LOG.info("jwt.sub=" + jwtSubject.get());
 
         try {
-            AccessToken accessToken = this.accessManagementService.GetIdentityProviderToken();
+            AccessToken accessToken = this.tokenManagementService.getIdentityProviderAccessToken();
 
             new JwtLogger().log(accessToken);
 

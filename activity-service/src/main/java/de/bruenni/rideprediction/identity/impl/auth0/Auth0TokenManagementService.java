@@ -1,13 +1,11 @@
 package de.bruenni.rideprediction.identity.impl.auth0;
 
-import com.auth0.client.mgmt.ManagementAPI;
 import com.auth0.exception.Auth0Exception;
 import com.auth0.json.mgmt.users.Identity;
 import com.auth0.json.mgmt.users.User;
 import com.auth0.net.Request;
-import de.bruenni.rideprediction.identity.api.AccessManagementException;
-import de.bruenni.rideprediction.identity.api.AccessToken;
-import de.bruenni.rideprediction.identity.api.AccessTokenNotAvailableException;
+import de.bruenni.rideprediction.identity.api.*;
+import org.apache.commons.lang3.NotImplementedException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.Claim;
 import org.eclipse.microprofile.jwt.Claims;
@@ -15,7 +13,6 @@ import org.eclipse.microprofile.jwt.Claims;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * Manages access tokens for users by caching them or retrieving them newly
@@ -23,7 +20,7 @@ import java.util.stream.Stream;
  * @author Oliver Brüntje
  */
 @RequestScoped
-public class AccessManagementService {
+public class Auth0TokenManagementService implements TokenManagementService {
 
     @Inject
     private ManagementAPICdi managementApi;
@@ -36,7 +33,16 @@ public class AccessManagementService {
     @ConfigProperty(name = "oauth.auth0.connection")
     private String connection;
 
-    protected AccessManagementService() {
+    protected Auth0TokenManagementService() {
+    }
+
+    /**
+     * Returns an identity hub access token for access to auth0.
+     * Infers user of current security context (MP-JWT).
+     * @return
+     */
+    @Override public AccessToken getAccessToken() {
+        throw new NotImplementedException("Not implemented yet");
     }
 
     /**
@@ -45,7 +51,7 @@ public class AccessManagementService {
      * by the SecurityContext.
      * @return
      */
-    public AccessToken GetIdentityProviderToken() throws AccessManagementException, AccessTokenNotAvailableException {
+    @Override public AccessToken getIdentityProviderAccessToken() throws TokenManagementException, AccessTokenNotAvailableException {
         Request<User> userRequest = managementApi.users().get(subject, null);
         try {
             User user = userRequest.execute();
@@ -58,7 +64,7 @@ public class AccessManagementService {
                     .map(identity -> new AccessToken(identity.getAccessToken()))
                     .orElseThrow(() -> new AccessTokenNotAvailableException("Could not get access token for connection [" + connection + "]"));
         } catch (Auth0Exception e) {
-            throw new AccessManagementException("GetIdentityProviderToken failed", e);
+            throw new TokenManagementException("GetIdentityProviderToken failed", e);
         }
     }
 }

@@ -8,8 +8,8 @@ import com.auth0.exception.Auth0Exception;
  *
  * @author Oliver Brüntje
  */
-public class AccessManagementException extends Exception {
-    public AccessManagementException(String message, Throwable e) {
+public class TokenManagementException extends Exception {
+    public TokenManagementException(String message, Throwable e) {
         super(message, e);
     }
 }
