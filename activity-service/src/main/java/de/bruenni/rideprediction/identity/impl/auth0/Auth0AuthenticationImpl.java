@@ -38,7 +38,7 @@ public class Auth0AuthenticationImpl implements OidcAuthenticationApi {
     private String connection;
 
     @Inject
-    public Auth0AuthenticationImpl(AuthenticationController authenticationController,
+    protected Auth0AuthenticationImpl(AuthenticationController authenticationController,
             @ConfigProperty(name = "oauth.tokenexchange.url") String exchangeTokenUrl,
             @ConfigProperty(name = "oauth.scope") String scope,
             @ConfigProperty(name = "oauth.auth0.connection") String connection) {
