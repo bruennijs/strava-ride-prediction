@@ -4,17 +4,20 @@ import org.apache.http.HttpHost;
 import org.eclipse.yasson.internal.JsonBindingBuilder;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.junit.*;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.Assert;
+import static org.assertj.core.api.Assertions.assertThat;  // main one
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 
 import javax.json.bind.Jsonb;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Optional;
-
-import static org.junit.Assert.*;
+import java.util.UUID;
 
 public class AthleteRepositoryTestIT {
 
@@ -58,7 +61,7 @@ public class AthleteRepositoryTestIT {
     @Test
     public void create() throws IOException {
 
-        Athlete athlete = new Athlete("1", "nickname a");
+        Athlete athlete = new Athlete("1", "nickname a", Collections.emptyList());
 
         // when
         repository.create(athlete);
@@ -70,6 +73,43 @@ public class AthleteRepositoryTestIT {
     }
 
     @Test
-    public void get() {
+    public void getNotExistingExpectEmpty() {
+
+        // when
+        Optional<Athlete> readAthlete = repository.get("4662");
+
+        // then
+        Assert.assertFalse(readAthlete.isPresent());
+    }
+
+    @Test
+    public void updateActivity() {
+
+        Athlete athlete = new Athlete(UUID.randomUUID().toString(), "nickname a", Collections.emptyList());
+
+        repository.create(athlete);
+
+        Athlete updatedAthlete = repository.addActivity(athlete.getId(), Collections.singletonList("first"));
+
+        // then
+        assertThat(updatedAthlete.getActivities())
+                .hasSize(1)
+                .contains("first");
+    }
+
+    @Test
+    public void updateActivtyTwiceExpectActivitiesMerged() {
+        Athlete athlete = new Athlete(UUID.randomUUID().toString(), "nickname a", Collections.emptyList());
+
+        repository.create(athlete);
+
+        Athlete updatedAthlete = repository.addActivity(athlete.getId(), Collections.singletonList("first"));
+        Athlete updated2Athlete = repository.addActivity(athlete.getId(), Collections.singletonList("second"));
+
+        // then
+        assertThat(updated2Athlete.getActivities())
+                .hasSize(1)
+                .contains("first")
+                .contains("second");
     }
 }

@@ -7,6 +7,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -42,7 +43,7 @@ public class AthleteService {
     }
 
     private Athlete createNewAthlete(String id) {
-        Athlete newAthlete = new Athlete(id, this.jwt.getSubject());
+        Athlete newAthlete = new Athlete(id, this.jwt.getSubject(), Collections.emptyList());
 
         repository.create(newAthlete);
 

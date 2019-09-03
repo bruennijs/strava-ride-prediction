@@ -9,6 +9,8 @@ import org.elasticsearch.action.get.GetRequestBuilder;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.transport.TransportClient;
@@ -19,8 +21,7 @@ import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
@@ -86,14 +87,46 @@ public class AthleteRepository {
         try {
             GetResponse response = client.get(request, RequestOptions.DEFAULT);
             if (response.isExists()) {
-                String sourceAsString = response.getSourceAsString();
-                Athlete athlete = json.fromJson(sourceAsString, Athlete.class);
+                Athlete athlete = json.fromJson(response.getSourceAsString(), Athlete.class);
                 return Optional.of(athlete);
             } else {
                 return Optional.empty();
             }
         } catch (IOException e) {
             throw new ElasticSearchRepositoryException("get athlete failed [id=" + id + "]",e);
+        }
+    }
+
+    /**
+     * Adds activity to document.
+     * @param id unique id of athlete
+     * @param activities activities to add
+     * @return Updated athlete.
+     */
+    public Athlete addActivity(String id, List<String> activities) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put(Athlete.FIELD_ACTIVITIES, activities);
+
+        UpdateRequest request = new UpdateRequest()
+                .index(INDEX)
+                .id(id)
+                .fetchSource(true) // fetches updated document
+                .doc(map);
+
+        try {
+            UpdateResponse response = client.update(request, RequestOptions.DEFAULT);
+            throwOnUpdateFailed(response);
+            String athleteJson = response.getGetResult().sourceAsString();
+            return json.fromJson(athleteJson, Athlete.class);
+        } catch (IOException e) {
+            throw new ElasticSearchRepositoryException("add athlete's activitiy failed [id=" + id + "]",e);
+        }
+    }
+
+    private void throwOnUpdateFailed(UpdateResponse response) {
+        if (response.getResult() != DocWriteResponse.Result.UPDATED) {
+            throw new ElasticSearchDocumentUpdateFailed(response.status(), response.getResult());
         }
     }
 
