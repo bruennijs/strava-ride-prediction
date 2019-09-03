@@ -28,17 +28,11 @@ public class ActivityResource {
     private static Logger LOG = LoggerFactory.getLogger(ActivityResource.class);
 
     @Inject
-    @Claim(standard = Claims.sub)
-    private Instance<String> jwtSubject;
-
-    @Inject
     private TokenManagementService tokenManagementService;
 
     @GET
     @Path("/overview")
     public Response getOverview() {
-
-        LOG.info("jwt.sub=" + jwtSubject.get());
 
         try {
             AccessToken accessToken = this.tokenManagementService.getIdentityProviderAccessToken();

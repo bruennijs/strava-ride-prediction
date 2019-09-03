@@ -1,15 +1,35 @@
 version: "3.6"
 services:
 
-  keycloak-gatekeeper:
-    container_name: rideprediction-keycloak-gatekeeper
-    image: jboss/gatekeeper
-    expose:
-      - 8080
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
+    container_name: rideprediction-es
+    environment:
+      - node.name=rideprediction-node01
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - /opt/github/bruenni/rideprediction/elasticsearch/esdata01:/usr/share/elasticsearch/data
     ports:
-      - 8091:8080
+      - 9200:9200
+      - 9300:9300
+    networks:
+      rideprediction:
+        aliases:
+          - elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.3.1
+    container_name: rideprediction-kibana
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+      - es
+    ports:
+      - 5601:5601
     networks:
       - rideprediction
+
 
   keycloak:
     container_name: rideprediction-keycloak
