@@ -1,0 +1,43 @@
+PUT /athlete/_doc/1
+{
+  "id": "1",
+  "nickname": "olli b",
+  "activities": []
+}
+
+
+
+PUT /athlete/_doc/2
+{
+  "id": "2",
+  "nickname": "peter d",
+  "activities": [{
+    "start_date": "2019-11-11T11:11:11Z",
+    "distance": 1200.0,
+    "moving_time": 360.0
+  }]
+}
+
+PUT /athlete/_doc/3
+{
+  "id": "3",
+  "nickname": "olli c",
+  "activities": []
+}
+
+PUT /athlete/_doc/4
+{
+  "id": "4",
+  "nickname": "hans glueck",
+  "activities": [
+    {
+      "start_date": "2018-07-13T09:13:45Z",
+      "distance": 2400.0,
+      "moving_time": 360.0
+  },
+    {
+      "start_date": "2018-09-13T07:00:45Z",
+      "distance": 3900.0,
+      "moving_time": 2313.0
+    }]
+}

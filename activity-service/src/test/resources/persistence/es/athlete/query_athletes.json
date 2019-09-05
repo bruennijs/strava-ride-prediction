@@ -1,0 +1,50 @@
+GET /athlete/_search
+{
+  "query": {
+    "match": {
+      "nickname": "olli c"
+    }
+  }
+}
+
+GET /athlete/_search
+{
+  "query": {
+    "match": {
+      "nickname": "olli c"
+    }
+  }
+}
+
+GET /athlete/_search
+{
+  "query": {
+    "nested": {
+      "path": "activities",
+      "query": { "range": { "start_date": { "gt": "2019-01-01T00:00:00Z" } } }
+    }
+  }
+}
+
+GET /athlete/_search
+{
+  "query": {
+    "nested": {
+      "path": "activities",
+      "query": { "term": { "start_date": { "gt": "2019-01-01T00:00:00Z" } } }
+    }
+  }
+}
+
+GET /athlete/_search
+{
+  "query": {
+    "nested": {
+      "path": "activities",
+      "query": {
+        "range":
+        { "activities.start_date":   { "gt": "2019-01-01" } }
+      }
+    }
+  }
+}

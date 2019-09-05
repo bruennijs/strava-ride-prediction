@@ -2,6 +2,7 @@ package de.bruenni.rideprediction.activityservice.infrastructure.rest.client.fil
 
 import org.eclipse.microprofile.jwt.Claim;
 import org.eclipse.microprofile.jwt.Claims;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,18 +19,23 @@ import java.io.IOException;
  * @author Oliver Brüntje
  */
 @Provider
-public class LogJwtUpnContainerRequestFilter implements ContainerRequestFilter {
+public class LogJwtClaimContainerRequestFilter implements ContainerRequestFilter {
 
-  private static final Logger LOG = LoggerFactory.getLogger(LogJwtUpnContainerRequestFilter.class);
+  private static final Logger LOG = LoggerFactory.getLogger(LogJwtClaimContainerRequestFilter.class);
+
+  private final String claimName;
+
+  public LogJwtClaimContainerRequestFilter() {
+    this.claimName = Claims.sub.name();
+  }
 
   @Inject
-  @Claim(standard = Claims.upn)
-  private Instance<String> upn;
+  private Instance<JsonWebToken> jwt;
 
   @Override
   public void filter(ContainerRequestContext requestContext) throws IOException {
-    if (this.upn.isResolvable()) {
-      LOG.info("JWT upn claim value: " + this.upn.get());
+    if (this.jwt.isResolvable()) {
+      LOG.info("JWT.'" + claimName + "'=" + this.jwt.get().claim(this.claimName));
     }
   }
 }

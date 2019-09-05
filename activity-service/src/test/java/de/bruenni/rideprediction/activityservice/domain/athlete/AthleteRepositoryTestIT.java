@@ -46,7 +46,7 @@ public class AthleteRepositoryTestIT {
 
     private static RestHighLevelClient buildClient(ElasticsearchContainer container) {
         String hostAddress = container.getContainerIpAddress();
-        Integer mappedPort = container.getMappedPort(9200);
+        Integer mappedPort = 9200;//container.getMappedPort(9200);
         return new RestHighLevelClient(
                 RestClient.builder(
                         new HttpHost(hostAddress, mappedPort, "http")));

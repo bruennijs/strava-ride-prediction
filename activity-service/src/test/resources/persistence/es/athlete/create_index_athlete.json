@@ -1,0 +1,16 @@
+PUT /athlete
+{
+  "mappings": {
+    "properties": {
+      "id":    { "type": "keyword" },
+      "nickname":  { "type": "keyword"  },
+      "activities":   {
+        "type": "nested",
+        "properties": {
+          "start_date": { "type": "date" },
+          "distance": {"type":  "float" }
+        }
+      }
+    }
+  }
+}

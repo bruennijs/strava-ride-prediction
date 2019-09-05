@@ -8,6 +8,8 @@ import org.elasticsearch.client.RestHighLevelClient;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
+import javax.inject.Scope;
+import javax.inject.Singleton;
 import javax.json.bind.Jsonb;
 import java.net.UnknownHostException;
 
@@ -25,7 +27,7 @@ public class ElasticSearchProvider {
     @ConfigProperty(name = "persistence.elasticsearch.host")
     private String host;
 
-    @ApplicationScoped
+    @Singleton  // not a NormalScope bean so no no-args constructor for weld proxy is available
     @Produces
     public RestHighLevelClient elasticSearchClient() throws UnknownHostException {
         return new RestHighLevelClient(
