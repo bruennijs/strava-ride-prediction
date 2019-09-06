@@ -1,4 +1,4 @@
-package de.bruenni.rideprediction.activityservice.domain.athlete;
+package de.bruenni.rideprediction.activityservice.infrastructure.persistence.elasticsearch;
 
 import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.rest.RestStatus;

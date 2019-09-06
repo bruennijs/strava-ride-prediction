@@ -23,4 +23,19 @@ public class Identifiable<T> {
     public T getId() {
         return id;
     }
+
+    @Override public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof Identifiable))
+            return false;
+
+        Identifiable<?> that = (Identifiable<?>)o;
+
+        return id.equals(that.id);
+    }
+
+    @Override public int hashCode() {
+        return id.hashCode();
+    }
 }

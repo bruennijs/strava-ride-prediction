@@ -1,6 +1,5 @@
 package de.bruenni.rideprediction.activityservice.domain.athlete;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import de.bruenni.rideprediction.activityservice.infrastructure.domain.Identifiable;
 
 import javax.json.bind.annotation.JsonbCreator;
@@ -19,30 +18,49 @@ public class Athlete extends Identifiable<String> {
 
     public static final String FIELD_NICK_NAME = "nick_name";
 
-    public static final String FIELD_ACTIVITIES = "activities";
+    public static final String FIELD_AUTH_IDS = "auth_ids";
 
     @JsonbProperty(value = FIELD_NICK_NAME)
     private String nickName;
 
-    @JsonbProperty(value = FIELD_ACTIVITIES)
-    private List<String> activities;
+    @JsonbProperty(value = FIELD_AUTH_IDS)
+    private List<String> authIds;
 
     /*    @JsonbProperty(value = "latest_activity_start_date")
     private LocalDateTime latestActivityStartDate*/
     @JsonbCreator
     public Athlete(@JsonbProperty(value = FIELD_ID) String userId,
             @JsonbProperty(value = FIELD_NICK_NAME) String nickName,
-            @JsonbProperty(value = FIELD_ACTIVITIES) List<String> activities) {
+            @JsonbProperty(value = FIELD_AUTH_IDS) List<String> authIds) {
         super(userId);
         this.nickName = notEmpty(nickName, "nickname may not be empty");
-        this.activities = activities;
+        this.authIds = notEmpty(authIds, "authIds may not be null or empty");
     }
 
     public String getNickName() {
         return nickName;
     }
 
-    public List<String> getActivities() {
-        return activities;
+    public List<String> getAuthIds() {
+        return authIds;
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof Athlete))
+            return false;
+        if (!super.equals(o))
+            return false;
+
+        Athlete athlete = (Athlete)o;
+
+        return nickName.equals(athlete.nickName);
+    }
+
+    @Override public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + nickName.hashCode();
+        return result;
     }
 }

@@ -1,10 +1,26 @@
 PUT /athlete/_doc/1
 {
   "id": "1",
+  "auth0_ids": ["1", "oauth|strava|1"],
   "nickname": "olli b",
   "activities": []
 }
 
+PUT /athlete/_doc/7
+{
+  "id": "7",
+  "auth0_ids": ["7", "oauth|strava|7"],
+  "nickname": "olli d",
+  "activities": []
+}
+
+PUT /athlete/_doc/8
+{
+  "id": "8",
+  "auth0_ids": ["8", "oauthstrava8"],
+  "nickname": "olli 8",
+  "activities": []
+}
 
 
 PUT /athlete/_doc/2

@@ -16,6 +16,7 @@ import javax.json.bind.Jsonb;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -46,7 +47,7 @@ public class AthleteRepositoryTestIT {
 
     private static RestHighLevelClient buildClient(ElasticsearchContainer container) {
         String hostAddress = container.getContainerIpAddress();
-        Integer mappedPort = 9200;//container.getMappedPort(9200);
+        Integer mappedPort = container.getMappedPort(9200);
         return new RestHighLevelClient(
                 RestClient.builder(
                         new HttpHost(hostAddress, mappedPort, "http")));
@@ -61,7 +62,7 @@ public class AthleteRepositoryTestIT {
     @Test
     public void create() throws IOException {
 
-        Athlete athlete = new Athlete("1", "nickname a", Collections.emptyList());
+        Athlete athlete = new Athlete(UUID.randomUUID().toString(), "nickname a", Collections.singletonList("12726"));
 
         // when
         repository.create(athlete);
@@ -82,7 +83,39 @@ public class AthleteRepositoryTestIT {
         Assert.assertFalse(readAthlete.isPresent());
     }
 
+
     @Test
+    public void findByAuthIds() throws IOException {
+
+        Athlete athlete = new Athlete(UUID.randomUUID().toString(), "nickname a", Collections.singletonList("oauth|strava|123"));
+        Athlete athlete2 = new Athlete(UUID.randomUUID().toString(), "nickname a", Collections.singletonList("oauth|strava|456"));
+
+        // when
+        repository.create(athlete);
+        repository.create(athlete2);
+        List<Athlete> athletes = repository.queryTerm("auth_ids.keyword", "oauth|strava|123");
+
+        // then
+        assertThat(athletes)
+                .hasSize(1)
+                .contains(athlete);
+    }
+
+    @Test
+    public void findByAuthIdsNotExisting() throws IOException {
+
+        Athlete athlete = new Athlete("1", "nickname a", Collections.singletonList("oauth|strava|123"));
+
+        // when
+        repository.create(athlete);
+        List<Athlete> athletes = repository.queryTerm("auth_ids.keyword", "oauth|strava|345");
+
+        // then
+        assertThat(athletes)
+                .hasSize(0);
+    }
+
+/*    @Test
     public void updateActivity() {
 
         Athlete athlete = new Athlete(UUID.randomUUID().toString(), "nickname a", Collections.emptyList());
@@ -95,9 +128,9 @@ public class AthleteRepositoryTestIT {
         assertThat(updatedAthlete.getActivities())
                 .hasSize(1)
                 .contains("first");
-    }
+    }*/
 
-    @Test
+/*    @Test
     public void updateActivtyTwiceExpectActivitiesMerged() {
         Athlete athlete = new Athlete(UUID.randomUUID().toString(), "nickname a", Collections.emptyList());
 
@@ -111,5 +144,5 @@ public class AthleteRepositoryTestIT {
                 .hasSize(1)
                 .contains("first")
                 .contains("second");
-    }
+    }*/
 }

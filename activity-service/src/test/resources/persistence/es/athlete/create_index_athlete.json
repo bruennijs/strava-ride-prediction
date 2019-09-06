@@ -3,6 +3,10 @@ PUT /athlete
   "mappings": {
     "properties": {
       "id":    { "type": "keyword" },
+      "auth0_ids": {
+        "type":  "text",
+        "analyzer": "standard"
+      },
       "nickname":  { "type": "keyword"  },
       "activities":   {
         "type": "nested",
