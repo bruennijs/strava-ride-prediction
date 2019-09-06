@@ -1,0 +1,24 @@
+{
+  "mappings": {
+    "properties": {
+      "id":    { "type": "keyword" },
+      "auth_ids": {
+        "type":  "text",
+        "analyzer": "standard",
+        "fields": {
+          "keyword": {
+            "type": "keyword"
+          }
+        }
+      },
+      "nickname":  { "type": "keyword"  },
+      "activities":   {
+        "type": "nested",
+        "properties": {
+          "start_date": { "type": "date" },
+          "distance": {"type":  "float" }
+        }
+      }
+    }
+  }
+}

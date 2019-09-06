@@ -1,5 +1,6 @@
 package de.bruenni.rideprediction.activityservice.domain.athlete;
 
+import de.bruenni.rideprediction.activityservice.infrastructure.persistence.elasticsearch.ElasticSearchDatabaseInitializer;
 import org.apache.http.HttpHost;
 import org.eclipse.yasson.internal.JsonBindingBuilder;
 import org.elasticsearch.client.RestClient;
@@ -31,13 +32,16 @@ public class AthleteRepositoryTestIT {
     private AthleteRepository repository;
 
     @BeforeClass
-    public static void setUp() {
+    public static void setUp() throws IOException {
         container = new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch-oss:7.3.1");
         container.start();
 
         client = buildClient(container);
 
         json = new JsonBindingBuilder().build();
+
+        // init db
+        new ElasticSearchDatabaseInitializer(client).onContainerStartup(null);
     }
 
     @Before
@@ -85,10 +89,10 @@ public class AthleteRepositoryTestIT {
 
 
     @Test
-    public void findByAuthIds() throws IOException {
+    public void findByAuthIds() {
 
         Athlete athlete = new Athlete(UUID.randomUUID().toString(), "nickname a", Collections.singletonList("oauth|strava|123"));
-        Athlete athlete2 = new Athlete(UUID.randomUUID().toString(), "nickname a", Collections.singletonList("oauth|strava|456"));
+        Athlete athlete2 = new Athlete(UUID.randomUUID().toString(), "nickname b", Collections.singletonList("oauth|strava|456"));
 
         // when
         repository.create(athlete);
@@ -104,11 +108,11 @@ public class AthleteRepositoryTestIT {
     @Test
     public void findByAuthIdsNotExisting() throws IOException {
 
-        Athlete athlete = new Athlete("1", "nickname a", Collections.singletonList("oauth|strava|123"));
+        Athlete athlete = new Athlete("1", "nickname a", Collections.singletonList("oauth|strava|4711"));
 
         // when
         repository.create(athlete);
-        List<Athlete> athletes = repository.queryTerm("auth_ids.keyword", "oauth|strava|345");
+        List<Athlete> athletes = repository.queryTerm("auth_ids.keyword", "oauth|strava|6857");
 
         // then
         assertThat(athletes)

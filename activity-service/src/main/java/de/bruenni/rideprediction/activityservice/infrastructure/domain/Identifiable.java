@@ -38,4 +38,10 @@ public class Identifiable<T> {
     @Override public int hashCode() {
         return id.hashCode();
     }
+
+    @Override public String toString() {
+        return "Identifiable{" +
+                "id=" + id +
+                '}';
+    }
 }

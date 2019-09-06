@@ -110,7 +110,7 @@ public abstract class ElasticSearchRepository<TId, TAggregate extends Identifiab
     public List<TAggregate> queryTerm(String fieldName, String value) {
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         TermQueryBuilder termQuery = QueryBuilders.termQuery(fieldName, value);
-        sourceBuilder.query(termQuery);
+        sourceBuilder = sourceBuilder.query(termQuery);
 
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(this.indexName);

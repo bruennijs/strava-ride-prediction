@@ -14,7 +14,7 @@ import static org.apache.commons.lang3.Validate.notEmpty;
  *
  * @author Oliver Brüntje
  */
-public class Athlete extends Identifiable<String> {
+public class Athlete extends Identifiable<String> implements Comparable<Athlete> {
 
     public static final String FIELD_NICK_NAME = "nick_name";
 
@@ -62,5 +62,16 @@ public class Athlete extends Identifiable<String> {
         int result = super.hashCode();
         result = 31 * result + nickName.hashCode();
         return result;
+    }
+
+    @Override public int compareTo(Athlete o) {
+        return this.equals(o) ? 0 : -1;
+    }
+
+    @Override public String toString() {
+        return "Athlete{" +
+                "nickName='" + nickName + '\'' +
+                ", authIds=" + authIds +
+                "} " + super.toString();
     }
 }
