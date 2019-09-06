@@ -21,7 +21,7 @@ import javax.ws.rs.core.Response;
  * @author Oliver Brüntje
  */
 @ApplicationScoped
-@Path("/activity-service")
+@Path("/activity-service/activities")
 @RolesAllowed("strava:athlete")
 public class ActivityResource {
 

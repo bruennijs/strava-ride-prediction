@@ -2,6 +2,7 @@ package de.bruenni.rideprediction.activityservice.application;
 
 import de.bruenni.rideprediction.activityservice.domain.athlete.Athlete;
 
+import javax.json.bind.annotation.JsonbProperty;
 import java.time.LocalDateTime;
 
 /**
@@ -11,6 +12,8 @@ import java.time.LocalDateTime;
  */
 public class AthleteProfile {
     private Athlete athlete;
+
+    @JsonbProperty(value = "activity_count")
     private int activityCount;
 
     public AthleteProfile(Athlete athlete, int activityCount) {

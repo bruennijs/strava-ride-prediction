@@ -30,23 +30,29 @@ public class AthleteService {
      * @return New or existing athlete.
      */
     public Athlete getOrCreateAthlete() {
-        String athleteId = this.jwt.getSubject();
+        String jwtSubject = this.jwt.getSubject();
 
-        Optional<Athlete> athlete = repository.get(athleteId);
+        Optional<Athlete> athlete = repository.get(jwtSubject);
 
         if (athlete.isPresent()) {
             return athlete.get();
         } else {
-            return createNewAthlete(athleteId);
+            return createNewAthlete(jwtSubject);
         }
 
     }
 
-    private Athlete createNewAthlete(String id) {
-        Athlete newAthlete = new Athlete(id, this.jwt.getSubject(), Collections.emptyList());
+    private Athlete createNewAthlete(String jwtSubject) {
+        String nickName = getNickName();
+
+        Athlete newAthlete = new Athlete(jwtSubject, nickName, Collections.singletonList(jwtSubject));
 
         repository.create(newAthlete);
 
         return newAthlete;
+    }
+
+    private String getNickName() {
+        return jwt.claim("nickname").orElse("unknown").toString();
     }
 }
