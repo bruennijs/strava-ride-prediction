@@ -44,7 +44,7 @@ public abstract class ElasticSearchRepository<TAggregate extends Identifiable<St
 
         String json = this.json.toJson(aggregate);
 
-        createRaw(aggregate.getId(), json);
+        indexDocument(aggregate.getId(), json);
     }
 
     /**

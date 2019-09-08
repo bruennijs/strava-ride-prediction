@@ -1,6 +1,5 @@
 package de.bruenni.rideprediction.activityservice.infrastructure.persistence.elasticsearch;
 
-import de.bruenni.rideprediction.activityservice.infrastructure.domain.Identifiable;
 import org.elasticsearch.action.DocWriteRequest;
 import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.get.GetRequest;
@@ -20,9 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -52,7 +49,7 @@ public abstract class ElasticSearchRepositoryBase {
      * @param id if of document
      * @param json json document
      */
-    protected void createRaw(String id, String json) {
+    protected void indexDocument(String id, String json) {
 
         IndexRequest request = new IndexRequest(this.indexName)
                 .id(id)
@@ -60,8 +57,22 @@ public abstract class ElasticSearchRepositoryBase {
                 .opType(DocWriteRequest.OpType.CREATE);
         try {
             IndexResponse response = client.index(request, RequestOptions.DEFAULT);
-            throwOnOpTypeCreateFailed(response);
+            throwOnOpTypeCreateOrUpdatedFailed(response);
             LOG.debug("Document indexed [id=" + id + "]");
+        } catch (IOException e) {
+            throw new ElasticSearchRepositoryException("create aggregate failed" ,e);
+        }
+    }
+
+    /**
+     * Index document.
+     * @param request index request to execute
+     */
+    protected void index(IndexRequest request) {
+        try {
+            IndexResponse response = client.index(request, RequestOptions.DEFAULT);
+            throwOnOpTypeCreateOrUpdatedFailed(response);
+            LOG.debug("Document indexed [id=" + request.id() + "]");
         } catch (IOException e) {
             throw new ElasticSearchRepositoryException("create aggregate failed" ,e);
         }
@@ -125,9 +136,9 @@ public abstract class ElasticSearchRepositoryBase {
         return indexName;
     }
 
-    private void throwOnOpTypeCreateFailed(IndexResponse response) {
+    private void throwOnOpTypeCreateOrUpdatedFailed(IndexResponse response) {
         if ((response.status().getStatus() != 201 && response.status().getStatus() != 200) ||
-                (response.getResult() != DocWriteResponse.Result.CREATED)) {
+                (response.getResult() != DocWriteResponse.Result.CREATED && response.getResult() != DocWriteResponse.Result.UPDATED)) {
             throw new ElasticSearchDocumentCreationFailed(response.status(), response.getResult());
         }
     }

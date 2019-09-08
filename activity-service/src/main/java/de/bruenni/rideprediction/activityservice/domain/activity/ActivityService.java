@@ -49,14 +49,37 @@ public class ActivityService {
     public void synchronize() {
         // todo: get latest download data and retrieve only newest
 
-        JsonArray activityArray = client.getActivities();
+        int i=1;
+        while(true) {
+            JsonArray activityArray = client.getActivities(10, i);
 
-        // get id to put to _doc resource to avoid duplicate activities when oberlapping activities
-        // are retrieved by strava API client.
-        LOG.debug("Sync strava activties result [count=" + activityArray.size() + "]");
+            // get id to put to _doc resource to avoid duplicate activities when oberlapping activities
+            // are retrieved by strava API client.
+            LOG.debug("Sync strava activties result [count=" + activityArray.size() + "]");
 
-        for (JsonValue activity : activityArray) {
-            activityRepository.create(UUID.randomUUID().toString(), activity.toString());
+            if (activityArray.size() > 0) {
+                for (JsonValue activity : activityArray) {
+                    StravaActivityDto stravaActivityDto = new StravaActivityDto(activity.asJsonObject());
+
+                    activityRepository.create(stravaActivityDto.getId(), activity.toString());
+                }
+
+                i++;
+            } else {
+                break;
+            }
+        }
+    }
+
+    public class StravaActivityDto {
+        private JsonObject json;
+
+        public StravaActivityDto(JsonObject json) {
+            this.json = json;
+        }
+
+        public String getId() {
+            return Integer.valueOf(this.json.getInt("id")).toString();
         }
     }
 }
