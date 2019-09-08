@@ -1,11 +1,13 @@
 package de.bruenni.rideprediction.activityservice.infrastructure.strava.client;
 
+import de.bruenni.rideprediction.activityservice.infrastructure.strava.client.filter.AccessTokenInjectionClientRequestFilter;
 import de.bruenni.rideprediction.identity.impl.strava.StravaAuthClient;
 import de.bruenni.rideprediction.identity.infrastructure.rest.client.filter.LogHeaderClientRequestFilter;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import java.net.URI;
 
 /**
@@ -16,11 +18,15 @@ import java.net.URI;
 @ApplicationScoped
 public class StravaProvider {
 
+    @Inject
+    private AccessTokenInjectionClientRequestFilter accessTokenInjectionClientRequestFilter;
+
     @Produces
-    public StravaAuthClient createClient() {
+    public StravaApiClient createClient() {
         return RestClientBuilder.newBuilder()
-                .baseUri(URI.create("https://www.strava.com"))
+                .baseUri(URI.create("https://www.strava.com/api/v3/"))
                 .register(LogHeaderClientRequestFilter.class)
-                .build(StravaAuthClient.class);
+                .register(accessTokenInjectionClientRequestFilter)
+                .build(StravaApiClient.class);
     }
 }

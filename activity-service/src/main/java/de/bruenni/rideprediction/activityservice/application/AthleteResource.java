@@ -5,6 +5,8 @@ import de.bruenni.rideprediction.activityservice.domain.athlete.AthleteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -20,6 +22,7 @@ import javax.ws.rs.core.MediaType;
  */
 @ApplicationScoped
 @Path("/activity-service/athletes")
+@RolesAllowed({"strava:athlete"})
 @Produces(value = { MediaType.APPLICATION_JSON })
 @Consumes(value = { MediaType.APPLICATION_JSON })
 public class AthleteResource {

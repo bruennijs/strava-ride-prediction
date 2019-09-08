@@ -1,12 +1,11 @@
 package de.bruenni.rideprediction.activityservice.infrastructure.strava.client;
 
-import de.bruenni.rideprediction.identity.impl.strava.StravaTokenExchangeResponse;
-
+import javax.json.JsonArray;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.xml.ws.Response;
+import javax.ws.rs.core.Response;
 
-@Path("/oauth/token")
+@Path("/")
 //@RegisterRestClient
 //@RegisterProvider(SomeClass.class)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -14,9 +13,9 @@ import javax.xml.ws.Response;
 public interface StravaApiClient {
     /**
      * Gets activities of the current user set by Authorization access token.
-     * @return
+     * @return Activities of this athlete
      */
-    @POST
-    @Path("activities")
-    Response<String> getActivities();
+    @GET
+    @Path("/athlete/activities")
+    JsonArray getActivities();
 }

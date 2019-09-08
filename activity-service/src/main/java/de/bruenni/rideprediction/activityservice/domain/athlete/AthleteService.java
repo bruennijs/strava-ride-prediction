@@ -1,12 +1,9 @@
 package de.bruenni.rideprediction.activityservice.domain.athlete;
 
-import org.eclipse.microprofile.jwt.Claim;
-import org.eclipse.microprofile.jwt.Claims;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
 

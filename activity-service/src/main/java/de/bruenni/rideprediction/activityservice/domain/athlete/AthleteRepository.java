@@ -31,15 +31,14 @@ public class AthleteRepository extends ElasticSearchRepository {
     public AthleteRepository(@Persistence Jsonb json, RestHighLevelClient client) {
         super(json, client, INDEX, Athlete.class);
         this.json = json;
-        this.client = client;
     }
 
-    /**
+/*    *//**
      * Adds activity to document.
      * @param id unique id of athlete
      * @param activities activities to add
      * @return Updated athlete.
-     */
+     *//*
     public Athlete addActivity(String id, List<String> activities) {
 
         Map<String, Object> map = new HashMap<>();
@@ -59,7 +58,7 @@ public class AthleteRepository extends ElasticSearchRepository {
         } catch (IOException e) {
             throw new ElasticSearchRepositoryException("add athlete's activitiy failed [id=" + id + "]",e);
         }
-    }
+    }*/
 
     public LocalDateTime getLatestActivityStartDate() {
         return null;

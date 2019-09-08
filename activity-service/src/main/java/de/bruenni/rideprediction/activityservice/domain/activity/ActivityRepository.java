@@ -1,6 +1,7 @@
 package de.bruenni.rideprediction.activityservice.domain.activity;
 
 import de.bruenni.rideprediction.activityservice.infrastructure.persistence.elasticsearch.ElasticSearchRepository;
+import de.bruenni.rideprediction.activityservice.infrastructure.persistence.elasticsearch.ElasticSearchRepositoryBase;
 import de.bruenni.rideprediction.activityservice.infrastructure.persistence.elasticsearch.Persistence;
 import org.apache.commons.lang3.tuple.Pair;
 import org.elasticsearch.action.update.UpdateRequest;
@@ -25,15 +26,21 @@ import static org.apache.commons.lang3.Validate.notNull;
  * @author Oliver Brüntje
  */
 @Singleton
-public class ActivityRepository {
+public class ActivityRepository extends ElasticSearchRepositoryBase {
 
     private final static String INDEX = "activity";
 
-    private final RestHighLevelClient client;
-
     @Inject
     public ActivityRepository(RestHighLevelClient client) {
-        this.client = notNull(client, "client cannot be null");
+        super(client, INDEX);
+    }
+
+    /**
+     * Creates activity by raw json.
+     * @param document activity document to create in index
+     */
+    public void create(String id, String document) {
+        createRaw(id, document);
     }
 
     public Pair<Integer, Integer> aggregateActivity(String athleteId) {

@@ -1,5 +1,6 @@
 package de.bruenni.rideprediction.activityservice.application;
 
+import de.bruenni.rideprediction.activityservice.domain.activity.ActivityService;
 import de.bruenni.rideprediction.activityservice.infrastructure.JwtLogger;
 import de.bruenni.rideprediction.identity.api.AccessToken;
 import de.bruenni.rideprediction.identity.api.TokenManagementService;
@@ -13,6 +14,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
@@ -30,6 +32,9 @@ public class ActivityResource {
     @Inject
     private TokenManagementService tokenManagementService;
 
+    @Inject
+    private ActivityService activityService;
+
     @GET
     @Path("/overview")
     public Response getOverview() {
@@ -38,6 +43,24 @@ public class ActivityResource {
             AccessToken accessToken = this.tokenManagementService.getIdentityProviderAccessToken();
 
             new JwtLogger().log(accessToken);
+
+            return Response.status(200).build();
+        } catch (Exception e) {
+            LOG.error("activity service get overview failed", e);
+            return Response.serverError().build();
+        }
+    }
+
+    /**
+     * Starts synchronization process with strava activities.
+     * @return
+     */
+    @POST
+    @Path("/sync")
+    public Response startSync() {
+
+        try {
+            activityService.synchronize();
 
             return Response.status(200).build();
         } catch (Exception e) {
