@@ -8,10 +8,13 @@ import de.bruenni.rideprediction.identity.api.AccessToken;
 import de.bruenni.rideprediction.identity.api.AccessTokenNotAvailableException;
 import de.bruenni.rideprediction.identity.api.TokenManagementException;
 import de.bruenni.rideprediction.identity.api.TokenManagementService;
+import de.bruenni.rideprediction.identity.infrastructure.Aggregator;
 import org.apache.commons.lang3.NotImplementedException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.Claim;
 import org.eclipse.microprofile.jwt.Claims;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -24,6 +27,8 @@ import java.util.Optional;
  */
 @RequestScoped
 public class Auth0TokenManagementService implements TokenManagementService {
+
+    private static Logger LOG = LoggerFactory.getLogger(Auth0TokenManagementService.class);
 
     @Inject
     private ManagementAPICdi managementApi;
@@ -58,6 +63,8 @@ public class Auth0TokenManagementService implements TokenManagementService {
         Request<User> userRequest = managementApi.users().get(subject, null);
         try {
             User user = userRequest.execute();
+
+            LOG.info("Auth0 federated identity user [props=" + new Aggregator().serialize(user.getValues()) + "]");
 
             Optional<Identity> identityOfConfiguredConnection = user.getIdentities().stream()
                     .filter(identity -> identity.getConnection().equals(this.connection))
