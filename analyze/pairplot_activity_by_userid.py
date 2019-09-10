@@ -1,8 +1,15 @@
 from elasticsearch import Elasticsearch
+from argparse import ArgumentParser
+
+# parse arguments
+parser = ArgumentParser("pairplot_activity_by_userid")
+parser.add_argument("--athlete_id", help="Unique strava athlete id to get activities for.", type=str)
+args = parser.parse_args()
 
 es = Elasticsearch()
 
-searchBody  = "{ \"query\": { \"term\": {        \"athlete.id_as_string\": {\"value\": \"2416334\" } } } }"
+print ("athlete_id={}".format(args.athlete_id))
+searchBody = "{ \"query\": { \"term\": {        \"athlete.id_as_string\": {\"value\": \"{}\" } } } }".format(args.athlete_id)
 
 params = {'_source': 'true' }
 

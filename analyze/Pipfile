@@ -9,6 +9,7 @@ verify_ssl = true
 elasticsearch = "==7.0.4"
 scikit-learn = "==0.21.3"
 pandas = "==0.24.2"
+argparse = "*"
 
 [requires]
 python_version = "3.5"
