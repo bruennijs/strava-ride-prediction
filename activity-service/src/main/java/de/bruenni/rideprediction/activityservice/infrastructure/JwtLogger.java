@@ -8,6 +8,8 @@ import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.apache.commons.lang3.Validate.notEmpty;
+
 /**
  * Logs JWTs to slf4j logger.
  *

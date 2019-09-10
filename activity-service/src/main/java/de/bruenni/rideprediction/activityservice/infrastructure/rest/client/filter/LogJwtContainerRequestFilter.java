@@ -21,7 +21,7 @@ import java.util.Optional;
  * @author Oliver Brüntje
  */
 @Provider
-@Priority(Priorities.AUTHENTICATION)
+@Priority(Priorities.AUTHORIZATION)
 public class LogJwtContainerRequestFilter implements ContainerRequestFilter {
 
   private static final Logger LOG = LoggerFactory.getLogger(LogJwtContainerRequestFilter.class);

@@ -64,7 +64,7 @@ public class Auth0TokenManagementService implements TokenManagementService {
         try {
             User user = userRequest.execute();
 
-            LOG.info("Auth0 federated identity user [props=" + new Aggregator().serialize(user.getValues()) + "]");
+            // LOG.info("Auth0 federated identity user [props=" + new Aggregator().serialize(user.getValues()) + "]");
 
             Optional<Identity> identityOfConfiguredConnection = user.getIdentities().stream()
                     .filter(identity -> identity.getConnection().equals(this.connection))

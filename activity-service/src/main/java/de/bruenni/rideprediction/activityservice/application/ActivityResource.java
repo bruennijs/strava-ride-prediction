@@ -40,9 +40,6 @@ public class ActivityResource {
     public Response getOverview() {
 
         try {
-            AccessToken accessToken = this.tokenManagementService.getIdentityProviderAccessToken();
-
-            new JwtLogger().log(accessToken);
 
             return Response.status(200).build();
         } catch (Exception e) {

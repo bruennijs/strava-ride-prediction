@@ -7,7 +7,7 @@ services:
     environment:
       - node.name=rideprediction-node01
       - discovery.type=single-node
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      # - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
       - /opt/github/bruenni/rideprediction/elasticsearch/esdata01:/usr/share/elasticsearch/data
     ports:

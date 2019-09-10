@@ -1,0 +1,16 @@
+{
+  "mappings": {
+    "properties": {
+      "id":    { "type": "keyword" },
+      "athlete.id": {
+        "type":  "text",
+        "analyzer": "keyword"
+      },
+      "athlete": {
+        "properties": {
+          "id_as_string": {"type":  "keyword"}
+        }
+      }
+    }
+  }
+}

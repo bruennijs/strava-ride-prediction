@@ -1,9 +1,11 @@
-package de.bruenni.rideprediction.activityservice.domain.athlete;
+package de.bruenni.rideprediction.activityservice.domain.activity;
 
 import de.bruenni.rideprediction.activityservice.domain.activity.ActivityRepository;
 import de.bruenni.rideprediction.activityservice.infrastructure.persistence.elasticsearch.ElasticSearchDatabaseInitializer;
+import de.bruenni.rideprediction.activityservice.infrastructure.persistence.elasticsearch.cdi.ElasticSearchProvider;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHost;
+import org.eclipse.yasson.internal.JsonBindingBuilder;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.json.JSONException;
@@ -12,6 +14,10 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonReaderFactory;
+import javax.json.bind.Jsonb;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -23,6 +29,8 @@ public class ActivityRepositoryTestIT {
 
     private static RestHighLevelClient client;
 
+    private static Jsonb json;
+
     private ActivityRepository repository;
 
     @BeforeClass
@@ -33,7 +41,8 @@ public class ActivityRepositoryTestIT {
         client = buildClient(container);
 
         // init db
-        new ElasticSearchDatabaseInitializer(client).onContainerStartup(null);
+        ElasticSearchProvider provider = new ElasticSearchProvider();
+        new ElasticSearchDatabaseInitializer(client, provider.getInitializerRequests()).onContainerStartup(null);
     }
 
     @Before
@@ -68,6 +77,6 @@ public class ActivityRepositoryTestIT {
 
         // then
         Assert.assertTrue(readActivity.isPresent());
-        JSONAssert.assertEquals(readActivity.get(), activityDocument, JSONCompareMode.NON_EXTENSIBLE);
+        JSONAssert.assertEquals(activityDocument, readActivity.get(), JSONCompareMode.NON_EXTENSIBLE);
     }
 }

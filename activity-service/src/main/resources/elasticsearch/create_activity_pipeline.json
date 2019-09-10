@@ -1,0 +1,12 @@
+{
+  "description": "converts integer of athlete.id to its string representation",
+  "processors" : [
+    {
+      "convert" : {
+        "field" : "athlete.id",
+        "type": "string",
+        "target_field": "athlete.id_as_string"
+      }
+    }
+  ]
+}

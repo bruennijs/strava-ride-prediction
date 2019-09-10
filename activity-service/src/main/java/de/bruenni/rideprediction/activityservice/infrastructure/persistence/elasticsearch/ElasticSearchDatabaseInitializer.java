@@ -12,6 +12,7 @@ import javax.enterprise.context.Initialized;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.List;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -27,10 +28,13 @@ public class ElasticSearchDatabaseInitializer {
 
     private RestHighLevelClient client;
 
+    private List<Request> requests;
+
     @Inject
-    public ElasticSearchDatabaseInitializer(RestHighLevelClient client) {
+    public ElasticSearchDatabaseInitializer(RestHighLevelClient client, List<Request> requests) {
         // CDI
         this.client = notNull(client, "client cannot be null");
+        this.requests = notNull(requests, " cannot be null");
     }
 
     /**
@@ -39,17 +43,16 @@ public class ElasticSearchDatabaseInitializer {
      */
     public void onContainerStartup(@Observes @Initialized(value = ApplicationScoped.class) Object init) throws IOException {
 
-        LOG.info("Initializing elastic search db [/elasticsearch/create_index_athlete.json]");
 
-        String indexMapping = IOUtils.toString(getClass().getResourceAsStream("/elasticsearch/create_index_athlete.json"));
+        for (Request request : this.requests) {
 
-        Request request = new Request("PUT", "athlete");
-        request.setJsonEntity(indexMapping);
+            LOG.info("Executing elasticsearch initializing request [" + request.toString() + "]");
 
-        try {
-            this.client.getLowLevelClient().performRequest(request);
-        } catch (Exception e) {
-            LOG.error("elastic search: perform request failed [" + request.toString() + "]");
+            try {
+                this.client.getLowLevelClient().performRequest(request);
+            } catch (Exception e) {
+                LOG.error("elastic search: perform request failed [" + request.toString() + "]");
+            }
         }
     }
 }

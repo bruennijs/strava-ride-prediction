@@ -1,6 +1,7 @@
 package de.bruenni.rideprediction.activityservice.domain.athlete;
 
 import de.bruenni.rideprediction.activityservice.infrastructure.persistence.elasticsearch.ElasticSearchDatabaseInitializer;
+import de.bruenni.rideprediction.activityservice.infrastructure.persistence.elasticsearch.cdi.ElasticSearchProvider;
 import org.apache.http.HttpHost;
 import org.eclipse.yasson.internal.JsonBindingBuilder;
 import org.elasticsearch.client.RestClient;
@@ -41,7 +42,8 @@ public class AthleteRepositoryTestIT {
         json = new JsonBindingBuilder().build();
 
         // init db
-        new ElasticSearchDatabaseInitializer(client).onContainerStartup(null);
+        ElasticSearchProvider provider = new ElasticSearchProvider();
+        new ElasticSearchDatabaseInitializer(client, provider.getInitializerRequests()).onContainerStartup(null);
     }
 
     @Before
