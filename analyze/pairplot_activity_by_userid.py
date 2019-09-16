@@ -1,5 +1,6 @@
 from elasticsearch import Elasticsearch
 from argparse import ArgumentParser
+import json
 
 # parse arguments
 parser = ArgumentParser("pairplot_activity_by_userid")
@@ -9,9 +10,20 @@ args = parser.parse_args()
 es = Elasticsearch()
 
 print ("athlete_id={}".format(args.athlete_id))
-searchBody = "{ \"query\": { \"term\": {        \"athlete.id_as_string\": {\"value\": \"{}\" } } } }".format(args.athlete_id)
 
-params = {'_source': 'true' }
+searchBody = {
+    "query": {
+        "term": {
+            "athlete.id_as_string": {
+                "value": "2416334"
+            }
+        }
+    }
+}
 
-response = es.search(index="activity", body=searchBody, params=params)
-print ("response={}".format(response))
+params = {'_source': 'true', 'size': 1000 }
+
+activityHits = es.search(index="activity", body=searchBody, params=params)
+
+sources = list(map(lambda activity: activity["_source"], activityHits["hits"]["hits"]))
+print ("{}".format(sources))
