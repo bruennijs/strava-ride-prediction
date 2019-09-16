@@ -3,6 +3,8 @@ from argparse import ArgumentParser
 import json
 
 # parse arguments
+from repository.client.elasticsearch import ActivityClient
+
 parser = ArgumentParser("pairplot_activity_by_userid")
 parser.add_argument("--athlete_id", help="Unique strava athlete id to get activities for.", type=str)
 args = parser.parse_args()
@@ -17,23 +19,11 @@ es = Elasticsearch()
 
 print ("athlete_id={}".format(args.athlete_id))
 
-searchBody = {
-    "query": {
-        "term": {
-            "athlete.id_as_string": {
-                "value": args.athlete_id
-            }
-        }
-    }
-}
-
-params = {'_source': 'true', 'size': 1000 }
-
-activityHits = es.search(index="activity", body=searchBody, params=params)
-
-sources = list(map(lambda activity: activity["_source"], activityHits["hits"]["hits"]))
-print ("{}".format(len(sources)))
+client = ActivityClient()
+activities = client.findAll(args.athlete_id)
 
 # Filter only with heart rate
-sourcesWithHeartrate = list(filter(lambda activity: activity["has_heartrate"], sources))
+sourcesWithHeartrate = list(filter(lambda activity: activity["has_heartrate"], activities))
 print ("{}".format(len(sourcesWithHeartrate)))
+
+
