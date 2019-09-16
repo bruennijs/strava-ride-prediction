@@ -1,8 +1,8 @@
 from elasticsearch import Elasticsearch
 from argparse import ArgumentParser
-import json
 
 # parse arguments
+from repository.activity import ActivityRepository
 from repository.client.elasticsearch import ActivityClient
 
 parser = ArgumentParser("pairplot_activity_by_userid")
@@ -19,11 +19,12 @@ es = Elasticsearch()
 
 print ("athlete_id={}".format(args.athlete_id))
 
-client = ActivityClient()
-activities = client.findAll(args.athlete_id)
+repo = ActivityRepository()
+activities = repo.findAll(args.athlete_id)
+print(activities)
 
 # Filter only with heart rate
-sourcesWithHeartrate = list(filter(lambda activity: activity["has_heartrate"], activities))
-print ("{}".format(len(sourcesWithHeartrate)))
+# sourcesWithHeartrate = list(filter(lambda activity: activity["has_heartrate"], activities))
+# print ("{}".format(len(sourcesWithHeartrate)))
 
 
