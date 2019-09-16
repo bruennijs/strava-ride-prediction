@@ -2,16 +2,17 @@ package de.bruenni.rideprediction.activityservice.domain.activity;
 
 import de.bruenni.rideprediction.activityservice.domain.athlete.AthleteRepository;
 import de.bruenni.rideprediction.activityservice.infrastructure.strava.client.StravaApiClient;
+import org.eclipse.microprofile.faulttolerance.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.json.*;
-import javax.json.stream.JsonParserFactory;
-import javax.ws.rs.core.Response;
+import javax.swing.table.TableRowSorter;
 
-import java.util.UUID;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -61,12 +62,50 @@ public class ActivityService {
                 for (JsonValue activity : activityArray) {
                     StravaActivityDto stravaActivityDto = new StravaActivityDto(activity.asJsonObject());
 
-                    activityRepository.create(stravaActivityDto.getId(), activity.toString());
+                    handleActivityZones(stravaActivityDto);
+
+                    handleActivityStreams(stravaActivityDto);
+
+                    activityRepository.create(stravaActivityDto.getId().toString(), stravaActivityDto.toString());
                 }
 
                 i++;
             } else {
                 break;
+            }
+        }
+    }
+
+    private void handleActivityStreams(StravaActivityDto stravaActivityDto) {
+        Long activityId = stravaActivityDto.getId();
+        String keys = "heartrate,time,distance,altitude";
+        try {
+            JsonArray streams = client.getActivityStreams(activityId, keys, true);
+
+            LOG.debug("set activity streams [activity id=" + activityId + "]");
+
+            stravaActivityDto.setStreams(streams);
+        } catch (Exception e) {
+            LOG.error("get activity streams failed [activity id=" + activityId + ",keys=" + keys + "]");
+        }
+    }
+
+    /**
+     * Loads activity zones by activity id and sets to activity dto document.
+     */
+    protected void handleActivityZones(StravaActivityDto stravaActivityDto) {
+        // get heart rate zones if activity has heart rates
+        if( stravaActivityDto.hasHeartRate()) {
+            // load heart rate zones
+            try {
+                JsonArray activityZones = client.getActivityZones(stravaActivityDto.getId());
+
+                if (activityZones.size() > 0) {
+                    LOG.debug("activity zones available [activity id=" + stravaActivityDto.getId() + "]");
+                    stravaActivityDto.setHeartRateZones(activityZones);
+                }
+            } catch (Exception e) {
+                LOG.error("get strava activity zones failed and will be ignored", e);
             }
         }
     }
@@ -78,8 +117,24 @@ public class ActivityService {
             this.json = json;
         }
 
-        public String getId() {
-            return Integer.valueOf(this.json.getInt("id")).toString();
+        public Long getId() {
+            return Long.valueOf(this.json.getJsonNumber("id").longValue());
+        }
+
+        public boolean hasHeartRate() {
+            return this.json.getBoolean("has_heartrate", false);
+        }
+
+        public void setHeartRateZones(JsonValue value) {
+            this.json.put("heart_rate_zones", value);
+        }
+
+        public String toJsonString() {
+            return json.toString();
+        }
+
+        public void setStreams(JsonValue streams) {
+            this.json.put("streams", streams);
         }
     }
 }
