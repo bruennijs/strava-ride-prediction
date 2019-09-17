@@ -1,5 +1,11 @@
 from argparse import ArgumentParser
+
 import seaborn as sb
+import matplotlib.pyplot as plt
+import pandas as pd
+
+from sklearn.preprocessing import StandardScaler
+
 from repository.activity import ActivityRepository
 
 parser = ArgumentParser("pairplot_activity_by_userid")
@@ -16,11 +22,16 @@ print ("athlete_id={}".format(args.athlete_id))
 
 repo = ActivityRepository()
 activities = repo.findAll(args.athlete_id)
-print(activities)
+# scale with std deviation
+scaler = StandardScaler()
+activities_scaled = scaler.fit_transform(activities.to_numpy())
+
+print(activities_scaled)
 
 # pair plot all features of all activities with heart rate
 sb.set()
-sb.pairplot(activities)
+sb.pairplot(pd.DataFrame(activities_scaled, columns=activities.columns), height=2.5)
+plt.show()
 
 # Filter only with heart rate
 # sourcesWithHeartrate = list(filter(lambda activity: activity["has_heartrate"], activities))

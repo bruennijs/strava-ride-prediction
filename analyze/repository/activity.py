@@ -1,7 +1,14 @@
+import datetime
+
 from pandas import DataFrame
 
 from .client.elasticsearch import ActivityClient
 from pandas.io.json import json_normalize
+
+
+def inferWeekday(sDatetimes):
+    sDatetimes.apply(lambda dt: datetime())
+
 
 class ActivityRepository(object):
     def __init__(self) -> None:
@@ -26,7 +33,9 @@ class ActivityRepository(object):
         # df = json_normalize(activtiesJson, ["distance", "total_elevation_gain", "average_speed", "start_date", "moving_time"])
         df = json_normalize(activtiesJson)
 
-        dfSelected = DataFrame(data=df, columns=["distance", "moving_time", "total_elevation_gain", "average_speed", "start_date"])
+        dfSelected = DataFrame(data=df, columns=["distance", "moving_time", "total_elevation_gain", "average_speed", "average_heartrate"])
+
+        dfSelected["start_isoweekday"] = inferWeekday(df["start_date"])
 
         return dfSelected
 
