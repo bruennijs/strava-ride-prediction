@@ -1,4 +1,5 @@
 import unittest
+from unittest import TestCase
 
 import pandas.testing as pdtesting
 from dateutil.parser import parser
@@ -8,8 +9,9 @@ from repository.builder import FeatureBuilder
 
 dateutilparser = parser()
 
+
 class FeatureBuilderTest(unittest.TestCase):
-    def test_something(self):
+    def test_convert_to_datetime(self):
         expectedDateTime = dateutilparser.parse(timestr="2019-11-01T13:14:15Z")
         sExpected = Series(data=[expectedDateTime])
 
@@ -22,6 +24,10 @@ class FeatureBuilderTest(unittest.TestCase):
         # then
         pdtesting.assert_series_equal(sExpected, sConverted)
 
+    def test_infer_isoweekday(self):
+        self.assertEquals(True, False)
+
 
 if __name__ == '__main__':
     unittest.main()
+
