@@ -9,4 +9,4 @@ class FeatureBuilder(object):
         return to_datetime(series, utc=True)
 
     def infer_isoweekday(self, series: Series):
-        series.apply(lambda dt: dt.isoweekday())
+        return series.apply(lambda dt: dt.isoweekday(), convert_dtype=True)
