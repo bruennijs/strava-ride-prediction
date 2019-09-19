@@ -11,7 +11,10 @@ class DatetimeBuilder(object):
         return series.apply(lambda dt: dt.isoweekday(), convert_dtype=True)
 
     def diff_nplus1_and_n(self, sTimeseries: pd.Series) -> pd.Series:
-        summand2 = sTimeseries.iloc[0:-1]
-        summand1: pd.Series = pd.Series(data=sTimeseries.iloc[1:].to_numpy())   # create from numy to reindex starting from 0 cause subtraction uses index to find corrrespondng items to subtract
-        return summand1 - summand2
+        summand2: pd.Series = sTimeseries.iloc[0:-1]
+        summand1: pd.Series = sTimeseries.iloc[1:]
+
+        # otherwise the index values in both Series correspond not to each other
+        ndDiff = summand1.to_numpy() - summand2.to_numpy()
+        return pd.Series(ndDiff)
 
