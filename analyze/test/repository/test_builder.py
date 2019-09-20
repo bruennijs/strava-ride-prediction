@@ -2,7 +2,6 @@ import unittest
 
 import pandas.testing as pdtesting
 import pandas as pd
-from numpy import linspace
 
 from repository.feature_builder import DatetimeBuilder
 
@@ -22,7 +21,7 @@ class FeatureBuilderTest(unittest.TestCase):
 
         # when
         sut = DatetimeBuilder()
-        sConverted = sut.convert_to_datetime(sInput)
+        sConverted = pd.to_datetime(sInput)
 
         # then
         pdtesting.assert_series_equal(sExpected, sConverted)
