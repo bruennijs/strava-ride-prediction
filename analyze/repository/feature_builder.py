@@ -1,4 +1,8 @@
 import pandas as pd
+import numpy.core as npc
+import numpy as np
+from numpy.core import timedelta64
+
 
 class DatetimeBuilder(object):
     def __init__(self):
@@ -7,14 +11,18 @@ class DatetimeBuilder(object):
     def infer_isoweekday(self, series: pd.Series) -> pd.Series:
         return series.apply(lambda dt: dt.isoweekday(), convert_dtype=True)
 
-    def diff_nplus1_and_n(self, sTimeseries: pd.Series) -> pd.Series:
+    def diff_nplus1_and_n(self, sTimeseries: pd.Series, pad: bool = True) -> pd.Series:
         # Sort by value
-        sTimesSeries = sTimeseries.sort_values()
+        ndTimeseries: npc.array = sTimeseries.sort_values().to_numpy()
 
-        summand2: pd.Series = sTimeseries.iloc[0:-1]
-        summand1: pd.Series = sTimeseries.iloc[1:]
+        ndDiff = np.diff(ndTimeseries)
 
-        # otherwise the index values in both Series correspond not to each other
-        ndDiff = summand1.to_numpy() - summand2.to_numpy()
+        if pad:
+            return pd.Series(np.pad(ndDiff, (1,0), constant_values=pd.Timedelta('nat')))
+            # pad NaT before to have
+
+
         return pd.Series(ndDiff)
+
+
 

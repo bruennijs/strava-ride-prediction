@@ -40,7 +40,7 @@ class FeatureBuilderTest(unittest.TestCase):
         pdtesting.assert_series_equal(pd.Series(data=[1, 2], dtype=int), sIsoweekday)
 
     def test_diff_timeseries_nplus1_and_n(self):
-        sExpected = pd.Series(data=[pd.Timedelta('1d')])
+        sExpected = pd.Series(pd.to_timedelta(['nat', '1d']))
 
         sTimeseries = pd.Series(data=[pd.Timestamp("2019-01-02T11:11:11Z"), pd.Timestamp("2019-01-01T11:11:11Z")])
 
@@ -51,7 +51,6 @@ class FeatureBuilderTest(unittest.TestCase):
         sTimedelta = sut.diff_nplus1_and_n(sTimeseries.sort_values())
 
         pdtesting.assert_series_equal(sExpected, sTimedelta)
-
 
 if __name__ == '__main__':
     unittest.main()
