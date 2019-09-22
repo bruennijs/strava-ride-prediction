@@ -2,6 +2,7 @@ import unittest
 
 import pandas.testing as pdtesting
 import pandas as pd
+import numpy as np
 
 from repository.feature_builder import DatetimeBuilder
 
@@ -40,17 +41,25 @@ class FeatureBuilderTest(unittest.TestCase):
         pdtesting.assert_series_equal(pd.Series(data=[1, 2], dtype=int), sIsoweekday)
 
     def test_diff_timeseries_nplus1_and_n(self):
-        sExpected = pd.Series(pd.to_timedelta(['nat', '1d']))
+        npExpected = pd.to_timedelta(['nat', '-1d'])
 
-        sTimeseries = pd.Series(data=[pd.Timestamp("2019-01-02T11:11:11Z"), pd.Timestamp("2019-01-01T11:11:11Z")])
+        npTimeseries = np.array([pd.Timestamp("2019-01-02T11:11:11Z"), pd.Timestamp("2019-01-01T11:11:11Z")])
 
         # when
         sut = DatetimeBuilder()
 
         # then
-        sTimedelta = sut.diff_nplus1_and_n(sTimeseries.sort_values())
+        npTimedelta = sut.infer_timedeltas(npTimeseries)
 
-        pdtesting.assert_series_equal(sExpected, sTimedelta)
+        pdtesting.assert_series_equal(pd.Series(data=npExpected), pd.Series(data=npTimedelta))
+
+    def test_sort_by_datetimeindex(self):
+
+        sIndex: pd.DatetimeIndex =  pd.to_datetime(['2019-01-02T00:00:00Z', '2019-01-01T00:00:00Z'], utc=True)
+
+        sUnsorted = pd.Series(data=np.linspace(1, 2, num=2), index=sIndex)
+        sSorted = sUnsorted.sort_index()
+        print(sSorted)
 
 if __name__ == '__main__':
     unittest.main()

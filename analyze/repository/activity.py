@@ -1,7 +1,8 @@
 import datetime
 
-from pandas import DataFrame
+import pandas as pd
 
+from repository.feature_builder import DatetimeBuilder
 from .client.elasticsearch import ActivityClient
 from pandas.io.json import json_normalize
 
@@ -14,8 +15,9 @@ class ActivityRepository(object):
     def __init__(self) -> None:
         super().__init__()
         self.client = ActivityClient()
+        self.datimeBuilder = DatetimeBuilder()
 
-    def findAll(self, athleteId):
+    def findAll(self, athleteId) -> pd.DataFrame:
         """
         Finds all activties from activity client and uses the following features
         in an pandas DataFrame:
@@ -30,12 +32,18 @@ class ActivityRepository(object):
 
         activtiesJson = self.client.findAll(athleteId)
 
-        # df = json_normalize(activtiesJson, ["distance", "total_elevation_gain", "average_speed", "start_date", "moving_time"])
         df = json_normalize(activtiesJson)
 
-        dfSelected = DataFrame(data=df, columns=["distance", "moving_time", "total_elevation_gain", "average_speed", "average_heartrate"])
+        dti: pd.DatetimeIndex =  pd.to_datetime(df["start_date"], utc=True)
 
-        dfSelected["start_isoweekday"] = inferWeekday(df["start_date"])
+        X = pd.DataFrame(data=df,
+                               columns=["distance", "moving_time", "total_elevation_gain", "average_speed", "average_heartrate"],
+                                  index=dti)
 
-        return dfSelected
+        X_sorted: pd.DataFrame = X.sort_index()
+
+        X_sorted["start_date_delta"] = self.datimeBuilder.infer_timedeltas(X_sorted.index.to_numpy())
+        X_sorted["start_isoweekday"] = self.datimeBuilder.infer_isoweekday(X_sorted.index.to_series())
+
+        return X_sorted
 
