@@ -24,14 +24,13 @@ repo = ActivityRepository()
 dfActivities: pd.DataFrame = repo.findAll(args.athlete_id)
 
 # scale with std deviation
-scaler = StandardScaler()
-activities_scaled = scaler.fit_transform(dfActivities.to_numpy())
-
-print(activities_scaled)
+# scaler = StandardScaler()
+# activities_scaled = scaler.fit_transform(dfActivities.to_numpy())
+# print(activities_scaled)
 
 # pair plot all features of all activities with heart rate
 sb.set()
-sb.pairplot(pd.DataFrame(activities_scaled, columns=dfActivities.columns), hue="start_date_diff", height=2.5)
+sb.pairplot(dfActivities, hue="start_date_delta", height=2.5)
 plt.show()
 
 # Filter only with heart rate

@@ -41,7 +41,7 @@ class FeatureBuilderTest(unittest.TestCase):
         pdtesting.assert_series_equal(pd.Series(data=[1, 2], dtype=int), sIsoweekday)
 
     def test_diff_timeseries_nplus1_and_n(self):
-        npExpected = pd.to_timedelta(['nat', '-1d'])
+        npExpected = pd.to_timedelta(['nat', '-1D'])
 
         npTimeseries = np.array([pd.Timestamp("2019-01-02T11:11:11Z"), pd.Timestamp("2019-01-01T11:11:11Z")])
 
@@ -52,6 +52,19 @@ class FeatureBuilderTest(unittest.TestCase):
         npTimedelta = sut.infer_timedeltas(npTimeseries)
 
         pdtesting.assert_series_equal(pd.Series(data=npExpected), pd.Series(data=npTimedelta))
+
+    def test_round_up_timedelta(self):
+
+        sExpected = pd.Series(data=[pd.to_timedelta('2D'), pd.to_timedelta('1D')])
+
+        # when
+        sut = DatetimeBuilder()
+
+        # then
+        sRounded = pd.Series(data=[pd.to_timedelta('1D14H'), pd.to_timedelta('1D2H')]).apply(lambda val: sut.round_timedelta_to_days(val))
+
+        pdtesting.assert_series_equal(sExpected, sRounded)
+        pdtesting.assert_series_equal(pd.Series(data=[2, 1]), sRounded.apply(lambda td: td.days))
 
     def test_sort_by_datetimeindex(self):
 

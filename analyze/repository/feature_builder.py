@@ -1,6 +1,5 @@
 import pandas as pd
 from numpy.core import timedelta64
-from pandas.core.api import Timedelta
 import numpy.core as npc
 import numpy as np
 
@@ -37,6 +36,9 @@ class DatetimeBuilder(object):
 
         np.digitize()
         return
+
+    def round_timedelta_to_days(self, value: pd.Timedelta):
+        return value.round("D")
 
 
 
