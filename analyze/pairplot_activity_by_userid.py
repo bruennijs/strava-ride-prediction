@@ -31,7 +31,7 @@ print(dfActivities)
 
 # pair plot all features of all activities with heart rate
 sb.set()
-sb.pairplot(dfActivities, hue="start_date_delta", height=2.5)
+sb.pairplot(dfActivities, height=2.5)
 plt.show()
 
 # Filter only with heart rate
