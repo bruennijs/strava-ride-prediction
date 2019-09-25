@@ -1,6 +1,7 @@
 import unittest
 
 import pandas.testing as pdtesting
+import numpy.testing as nptesting
 import pandas as pd
 import numpy as np
 
@@ -65,6 +66,16 @@ class FeatureBuilderTest(unittest.TestCase):
 
         pdtesting.assert_series_equal(sExpected, sRounded)
         pdtesting.assert_series_equal(pd.Series(data=[2, 1]), sRounded.apply(lambda td: td.days))
+
+    def test_bin_timedelta(self):
+        days: np.array = np.array([10, 27, 33, 44, 53, 62, 71, 80, 90, 2400])
+
+        sut = DatetimeBuilder()
+
+        days_binned = sut.bin_timedelta(days)
+
+        # then
+        nptesting.assert_array_equal(np.array([1, 3, 3, 4, 5, 6 , 7, 8]), days_binned)
 
     def test_sort_by_datetimeindex(self):
 

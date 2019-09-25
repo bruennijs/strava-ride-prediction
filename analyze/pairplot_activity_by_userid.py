@@ -24,9 +24,10 @@ repo = ActivityRepository()
 dfActivities: pd.DataFrame = repo.findAll(args.athlete_id)
 
 # scale with std deviation
-# scaler = StandardScaler()
-# activities_scaled = scaler.fit_transform(dfActivities.to_numpy())
-# print(activities_scaled)
+scaler = StandardScaler()
+activities_scaled = scaler.fit_transform(dfActivities.to_numpy())
+dfActivities = dfActivities.from_records(data=activities_scaled, index=dfActivities.index, columns=dfActivities.columns)
+print(dfActivities)
 
 # pair plot all features of all activities with heart rate
 sb.set()

@@ -8,10 +8,7 @@ class DatetimeBuilder(object):
     def __init__(self):
         pass;
 
-    def infer_isoweekday(self, series) -> pd.Series:
-        return series.apply(lambda dt: dt.isoweekday(), convert_dtype=True)
-
-    def infer_timedeltas(self, array: np.array, pad: bool = True) -> pd.Series:
+    def infer_timedeltas(self, array: np.array, pad: bool = True) -> np.array:
 
         ndDiff = np.diff(array)
 
@@ -22,20 +19,18 @@ class DatetimeBuilder(object):
         # Series contains len(series) -1
         return ndDiff
 
-    def categorize_timedelta(self, sSeries: pd.Series) -> pd.Series:
+    def bin_timedelta(self, a: np.array) -> np.array:
         '''
         1. calculates max delta over all elements in days
         2. Categorizes with n categories , where n is equal max delta in days
         :param sSeries: Series of pandas Timedelta
         :return:
         '''
-        series_min = sSeries.min(skipna=True)
-        series_max: timedelta64 = sSeries.max(skipna=True)
 
-        np.linspace(series_max)
+        nPercentile80 = np.percentile(a, q=[80, 20], interpolation='nearest')[0]
+        bins = np.linspace(np.min(a), nPercentile80, num=10)
 
-        np.digitize()
-        return
+        return np.digitize(a, bins=bins)
 
     def round_timedelta_to_days(self, value: pd.Timedelta):
         return value.round("D")
