@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 import numpy as np
 
-from repository.feature_builder import DatetimeBuilder
+from domain.repository.feature_builder import DatetimeBuilder
 from .client.elasticsearch import ActivityClient
 from pandas.io.json import json_normalize
 
@@ -60,6 +60,7 @@ class ActivityRepository(object):
 
         # infer weekdays from datetimeindex
         sIsoWeekDays = X_sorted_index.apply(lambda dt: dt.isoweekday(), convert_dtype=True)
+        sIsoWeekDays = sIsoWeekDays.astype('category')
         X_sorted = X_sorted.assign(start_date_isoweekday=sIsoWeekDays)
 
 
