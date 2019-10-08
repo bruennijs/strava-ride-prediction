@@ -44,7 +44,7 @@ labels = np.unique(y)
 
 for i in range(nFeatures):
 
-    X_feature = X.iloc[:, i].to_numpy()
+    X_feature: np.array = X.iloc[:, i].to_numpy()
     X_feature = np.nan_to_num(X_feature)
     freq_per_bin, bins = np.histogram(a=X_feature, bins=25)
     for label in labels:
