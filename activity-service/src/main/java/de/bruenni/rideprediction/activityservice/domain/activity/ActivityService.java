@@ -1,18 +1,16 @@
 package de.bruenni.rideprediction.activityservice.domain.activity;
 
 import de.bruenni.rideprediction.activityservice.domain.athlete.AthleteRepository;
+import de.bruenni.rideprediction.activityservice.domain.strava.StravaActivity;
+import de.bruenni.rideprediction.activityservice.domain.strava.StravaActivityBuilder;
 import de.bruenni.rideprediction.activityservice.infrastructure.strava.client.StravaApiClient;
-import org.eclipse.microprofile.faulttolerance.Retry;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.json.*;
-import javax.swing.table.TableRowSorter;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -60,13 +58,17 @@ public class ActivityService {
 
             if (activityArray.size() > 0) {
                 for (JsonValue activity : activityArray) {
-                    StravaActivityDto stravaActivityDto = new StravaActivityDto(activity.asJsonObject());
+                    JsonObject activityJsonObject = activity.asJsonObject();
 
-                    handleActivityZones(stravaActivityDto);
+                    StravaActivity stravaActivity = parseStravaActivity(activityJsonObject);
 
-                    handleActivityStreams(stravaActivityDto);
+                    StravaActivityBuilder builder = new StravaActivityBuilder(activityJsonObject);
+                    handleActivityStreams(stravaActivity.getId(), builder);
 
-                    activityRepository.create(stravaActivityDto.getId().toString(), stravaActivityDto.toString());
+                    // handleActivityZones(stravaActivityDto);
+
+                    stravaActivity = builder.build();
+                    activityRepository.create(stravaActivity.getId().toString(), stravaActivity.toJsonString());
                 }
 
                 i++;
@@ -76,15 +78,19 @@ public class ActivityService {
         }
     }
 
-    private void handleActivityStreams(StravaActivityDto stravaActivityDto) {
-        Long activityId = stravaActivityDto.getId();
-        String keys = "heartrate,time,distance,altitude";
+    protected StravaActivity parseStravaActivity(JsonObject activityJsonObject) {
+        StravaActivityBuilder builder = new StravaActivityBuilder(activityJsonObject);
+        return builder.build();
+    }
+
+    private void handleActivityStreams(Long activityId, StravaActivityBuilder builder) {
+        String keys = "altitude,latlng,velocity_smooth,time,distance,cadence,grade_smooth,watts";
         try {
             JsonArray streams = client.getActivityStreams(activityId, keys, true);
 
             LOG.debug("set activity streams [activity id=" + activityId + "]");
 
-            stravaActivityDto.setStreams(streams);
+            builder.withStreams(streams);
         } catch (Exception e) {
             LOG.error("get activity streams failed [activity id=" + activityId + ",keys=" + keys + "]");
         }
@@ -93,6 +99,7 @@ public class ActivityService {
     /**
      * Loads activity zones by activity id and sets to activity dto document.
      */
+    /*
     protected void handleActivityZones(StravaActivityDto stravaActivityDto) {
         // get heart rate zones if activity has heart rates
         if( stravaActivityDto.hasHeartRate()) {
@@ -108,33 +115,7 @@ public class ActivityService {
                 LOG.error("get strava activity zones failed and will be ignored", e);
             }
         }
-    }
+    }*/
 
-    public class StravaActivityDto {
-        private JsonObject json;
 
-        public StravaActivityDto(JsonObject json) {
-            this.json = json;
-        }
-
-        public Long getId() {
-            return Long.valueOf(this.json.getJsonNumber("id").longValue());
-        }
-
-        public boolean hasHeartRate() {
-            return this.json.getBoolean("has_heartrate", false);
-        }
-
-        public void setHeartRateZones(JsonValue value) {
-            this.json.put("heart_rate_zones", value);
-        }
-
-        public String toJsonString() {
-            return json.toString();
-        }
-
-        public void setStreams(JsonValue streams) {
-            this.json.put("streams", streams);
-        }
-    }
 }

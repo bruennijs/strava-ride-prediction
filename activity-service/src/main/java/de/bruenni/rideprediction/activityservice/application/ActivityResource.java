@@ -40,7 +40,6 @@ public class ActivityResource {
     public Response getOverview() {
 
         try {
-
             return Response.status(200).build();
         } catch (Exception e) {
             LOG.error("activity service get overview failed", e);

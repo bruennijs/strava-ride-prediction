@@ -30,7 +30,6 @@ public class AthleteRepository extends ElasticSearchRepository {
     @Inject
     public AthleteRepository(@Persistence Jsonb json, RestHighLevelClient client) {
         super(json, client, INDEX, Athlete.class);
-        this.json = json;
     }
 
 /*    *//**

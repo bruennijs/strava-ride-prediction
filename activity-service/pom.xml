@@ -5,6 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
     <properties>
         <project.version>1.0</project.version>
+        <version.log4j>2.9.1</version.log4j>
+        <version.slf4j-api>1.7.28</version.slf4j-api>
     </properties>
 
     <parent>
@@ -51,6 +53,10 @@
         </dependency>
         <dependency>
             <groupId>io.thorntail</groupId>
+            <artifactId>microprofile-fault-tolerance</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.thorntail</groupId>
             <artifactId>bean-validation</artifactId>
         </dependency>
         <dependency>
@@ -76,8 +82,19 @@
 
         <!-- logging -->
         <dependency>
-            <groupId>io.thorntail</groupId>
-            <artifactId>logging</artifactId>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${version.slf4j-api}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${version.log4j}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${version.log4j}</version>
         </dependency>
 
         <!-- SECURITY -->
@@ -107,7 +124,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.28</version>
+            <version>${version.slf4j-api}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 
 import pandas as pd
 import numpy as np
+from sklearn.decomposition import PCA
 
 from domain.activity import Activity
 
@@ -31,13 +32,17 @@ dfActivities: pd.DataFrame = repo.findAll(args.athlete_id)
 
 activity = Activity(dfActivities)
 X, y = activity.load_activity()
+X.loc[:, 'average_heartrate'].mask(lambda x: pd.isna(x), other=0.0, inplace=True)
 
 sb.set()
+
+pca = PCA(2)
+X_decomposed = pca.fit_transform(X)
+
+dfX_decomposed = pd.DataFrame(data=X_decomposed, index=X.index, columns=["A", "B"])
+
 # pair plot all features of all activities with heart rate
-nSamples, nFeatures = X.shape
-fig, ax = plt.subplots(nrows=nFeatures, ncols=1, squeeze=True, figsize=(5.0, 25.0))
-# sb.pairplot(dfActivities, height=2.5)
-
-
+dfX_decomposed_labeled = dfX_decomposed.assign(y=X.loc[:, 'start_date_delta'])
+sb.pairplot(dfX_decomposed_labeled, hue='y', height=2.5)
 
 plt.show()

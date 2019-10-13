@@ -17,27 +17,47 @@ import java.io.IOException;
  *
  * @author Oliver Brüntje
  */
-@Provider
-@Priority(Integer.MAX_VALUE)
+// @Provider
+// @Priority(Integer.MAX_VALUE)
 public class LogHeaderClientRequestFilter implements ClientRequestFilter, ClientResponseFilter {
 
   private static Logger LOG = LoggerFactory.getLogger(LogHeaderClientRequestFilter.class);
 
+  private boolean logRequestLine;
+
+  private boolean logHeader;
+
+  public LogHeaderClientRequestFilter(boolean logRequestLine, boolean logHeader) {
+    this.logRequestLine = logRequestLine;
+    this.logHeader = logHeader;
+  }
+
+  protected LogHeaderClientRequestFilter() {
+    this(true, true);
+    // CDI
+  }
+
   @Override
   public void filter(ClientRequestContext requestContext) throws IOException {
-    LOG.info("==== REQUEST: " + requestContext.getMethod() + " " + requestContext.getUri() + " ====");
+    if (logRequestLine) {
+      LOG.debug("==== REQUEST: {} {} ====", requestContext.getMethod(), requestContext.getUri());
+    }
     logHeaders(requestContext.getStringHeaders());
   }
 
   @Override
   public void filter(ClientRequestContext requestContext, ClientResponseContext responseContext) throws IOException {
-    LOG.info("==== RESPONSE " + responseContext.getStatus() + " ====");
+    if (logRequestLine) {
+      LOG.debug("==== RESPONSE {} ====", responseContext.getStatus());
+    }
     logHeaders(responseContext.getHeaders());
   }
 
   private void logHeaders(MultivaluedMap<String, String> map) {
-    map.forEach((key, value) -> {
-      LOG.info(key + ":" + value.stream().reduce("", (item1, item2) -> item1 + "=" + item2, (s, s2) -> s + s2));
-    });
+    if (logHeader) {
+      map.forEach((key, value) -> {
+        LOG.debug("{}: {}", key, value.stream().reduce("", (item1, item2) -> item1 + "=" + item2, (s, s2) -> s + s2));
+      });
+    }
   }
 }

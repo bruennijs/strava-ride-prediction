@@ -99,7 +99,7 @@ public class AthleteRepositoryTestIT {
         // when
         repository.create(athlete);
         repository.create(athlete2);
-        List<Athlete> athletes = repository.queryTermAggregate("auth_ids.keyword", "oauth|strava|123");
+        List<Athlete> athletes = repository.queryTermObject("auth_ids.keyword", "oauth|strava|123");
 
         // then
         assertThat(athletes)
@@ -114,7 +114,7 @@ public class AthleteRepositoryTestIT {
 
         // when
         repository.create(athlete);
-        List<Athlete> athletes = repository.queryTermAggregate("auth_ids.keyword", "oauth|strava|6857");
+        List<Athlete> athletes = repository.queryTermObject("auth_ids.keyword", "oauth|strava|6857");
 
         // then
         assertThat(athletes)

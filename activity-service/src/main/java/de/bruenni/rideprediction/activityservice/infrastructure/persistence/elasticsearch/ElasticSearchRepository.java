@@ -63,7 +63,7 @@ public abstract class ElasticSearchRepository<TAggregate extends Identifiable<St
      * @param value value to match
      * @return
      */
-    public List<TAggregate> queryTermAggregate(String fieldName, String value) {
+    public List<TAggregate> queryTermObject(String fieldName, String value) {
         return super.queryTerm(fieldName, value)
                 .map(str -> this.json.fromJson(str, this.className))
                 .collect(Collectors.toList());
